@@ -109,8 +109,14 @@ The merged shapefile includes 23 different regions, which matches the
 number of regional FishMIP models. We can now save this merged file.
 
 ``` r
+#Location of folder for outputs
+out_folder <- "../Outputs/FishMIP_regional_models"
+#If folder does not exist, create one
+if(!dir.exists(out_folder)){
+  dir.create(out_folder, recursive = T)}
+
 regions |> 
-  write_sf("../Shapefiles_Regions/FishMIP_regional_models.shp")
+  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"))
 ```
 
 Remember, the final shapefile is also available in the [FishMIP THREDDS

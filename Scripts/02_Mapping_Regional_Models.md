@@ -1,0 +1,421 @@
+Creating a map with FishMIP regional models
+================
+Denisse Fierro Arcos
+2023-11-01
+
+- <a href="#introduction" id="toc-introduction">Introduction</a>
+- <a href="#loading-libraries" id="toc-loading-libraries">Loading
+  libraries</a>
+- <a href="#downloading-fishmip-regional-models-shapefile-from-thredds"
+  id="toc-downloading-fishmip-regional-models-shapefile-from-thredds">Downloading
+  FishMIP regional models shapefile from THREDDS</a>
+- <a href="#loading-fishmip-regional-models-shapefile"
+  id="toc-loading-fishmip-regional-models-shapefile">Loading FishMIP
+  regional models shapefile</a>
+- <a href="#plotting-map" id="toc-plotting-map">Plotting map</a>
+  - <a href="#data-preparation" id="toc-data-preparation">Data
+    preparation</a>
+  - <a href="#mapping-fishmip-regional-models"
+    id="toc-mapping-fishmip-regional-models">Mapping FishMIP regional
+    models</a>
+    - <a href="#europe" id="toc-europe">Europe</a>
+    - <a href="#brazil" id="toc-brazil">Brazil</a>
+    - <a href="#australia-and-new-zealand"
+      id="toc-australia-and-new-zealand">Australia and New Zealand</a>
+    - <a href="#southern-ocean" id="toc-southern-ocean">Southern Ocean</a>
+    - <a href="#adding-boundaries-of-inset-maps-into-main-map"
+      id="toc-adding-boundaries-of-inset-maps-into-main-map">Adding boundaries
+      of inset maps into main map</a>
+  - <a href="#saving-final-map" id="toc-saving-final-map">Saving final
+    map</a>
+
+# Introduction
+
+Now that we have a single shapefile with all the FishMIP regional
+models, we will create a map that can be used in any publication.
+
+Here, we will show how to access and download the FishMIP regional
+models shapefile available from the THREDDS server.
+
+# Loading libraries
+
+``` r
+#Connection to THREDDS
+library(thredds)
+#Downloading data
+library(curl)
+```
+
+    ## Using libcurl 7.81.0 with GnuTLS/3.7.3
+
+``` r
+#Manipulating data
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+#Spatial data
+library(sf)
+```
+
+    ## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE
+
+``` r
+#Base map
+library(rnaturalearth)
+#Plotting maps
+library(ggplot2)
+library(cowplot)
+library(RColorBrewer)
+```
+
+# Downloading FishMIP regional models shapefile from THREDDS
+
+We will use the `HTTPServer` service to download the shapefile files
+which are available as a `zip` folder.
+
+**Note** that you only need to download shapefiles once.
+
+``` r
+#Defining domain name for THREDDS server
+domain <- "http://portal.sf.utas.edu.au"
+#Defining location of regional shapefile in THREDDS server
+fishmip_reg_cat <- paste0(domain, "/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.xml")
+
+#Getting catalog items available in server
+fishmip_reg <- CatalogNode$new(fishmip_reg_cat, prefix = "thredds")
+
+#Getting base url for HTTPServer downloads
+base_http <- paste0(domain, fishmip_reg$list_services()$http[["base"]])
+
+#Getting names of datasets available for download
+ds_name <- fishmip_reg$get_dataset_names()
+
+#Getting complete download URL
+url <- paste0(base_http, fishmip_reg$get_datasets()[[ds_name]]$url)
+
+#Downloading zip file
+curl_download(url, destfile = "FishMIP_regions.zip")
+
+#Unzipping folder - storing files in Output folder
+out_folder <- "../Outputs"
+#If folder does not exist, create one
+if(!dir.exists(out_folder)){
+  dir.create(out_folder, recursive = T)}
+unzip("FishMIP_regions.zip", exdir = out_folder)
+
+#Delete zip folder
+unlink("../FishMIP_regions.zip")
+
+#Removing all variables from environment
+rm(list = ls())
+```
+
+# Loading FishMIP regional models shapefile
+
+Now that we have downloaded the merged shapefiles, we can load it to `R`
+and create a map. We will exclude the Southern Ocean region.
+
+``` r
+fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+  filter(region != "Southern Ocean")
+
+#Checking results
+fishmip_reg
+```
+
+    ## Simple feature collection with 22 features and 1 field
+    ## Geometry type: MULTIPOLYGON
+    ## Dimension:     XY
+    ## Bounding box:  xmin: -180 ymin: -69.8008 xmax: 180 ymax: 64.5
+    ## Geodetic CRS:  WGS 84
+    ## # A tibble: 22 × 2
+    ##    region                                                               geometry
+    ##  * <chr>                                                      <MULTIPOLYGON [°]>
+    ##  1 Baltic Sea         (((23.5 64.5, 23.5 64.05521, 23.49948 64.05469, 23.49792 …
+    ##  2 Benguela           (((19.90119 -36.77948, 17.34643 -34.5195, 14.36752 -29.82…
+    ##  3 Brasil NE          (((-36.94482 -4.549031, -36.94233 -4.551432, -36.93993 -4…
+    ##  4 Central Pacific    (((-168.2779 -22.09492, -168.6017 -22.25041, -169.2678 -2…
+    ##  5 Chatham Rise       (((172 -45.33333, 172 -44.91667, 172 -44.5, 173.3333 -43.…
+    ##  6 Cook Strait        (((175.209 -40.5, 175.2088 -40.50062, 175.2087 -40.50105,…
+    ##  7 East Bass Strait   (((150.5 -36, 150.5 -39, 146.5 -39, 146.5 -38.78087, 146.…
+    ##  8 East Bearing Sea   (((-165.61 54.51, -165.61 54.52, -165.61 54.53, -165.59 5…
+    ##  9 East Scotian Shelf (((-60.0875 47.2625, -60.0875 47.25833, -60.075 47.25833,…
+    ## 10 Gulf Alaska        (((-166.2288 53.93614, -166.2306 53.93381, -166.2309 53.9…
+    ## # ℹ 12 more rows
+
+# Plotting map
+
+Since we removed the Southern Ocean region, we have 22 polygons left.
+However, we will need to apply some changes to our datasets to create
+publication ready maps.
+
+## Data preparation
+
+We will use a Robinson projection for our map, so we need to reproject
+our shapefile. A reprojection also needs to be applied to our base world
+map.
+
+We will also create a an original colour map to plot the FishMIP regions
+using a combination of `RColorBrewer` palettes. We will add this
+information to the reprojected regional shapefile for plotting.
+
+``` r
+#Define Robinson projection to be applied to shapefile and basemap
+rob_proj <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs"
+
+#Load world base map
+world <- ne_countries(scale = "medium", returnclass = "sf") |> 
+  #Ensuring any polygons crossing international dateline are correctly plotted
+  st_wrap_dateline() |> 
+  #Reprojecting
+  st_transform(rob_proj)
+
+#Creating a colour palette by merging colour brewer palettes
+pal <- c(brewer.pal(7, "Set2"), brewer.pal(7, "Dark2"), brewer.pal(8, "Set1"))
+
+#Reprojecting FishMIP regions
+fishmip_reg_rob <- fishmip_reg |> 
+  #Adding colour palette
+  mutate(fill = pal) |> 
+  st_wrap_dateline() |> 
+  st_transform(rob_proj)
+```
+
+## Mapping FishMIP regional models
+
+Since there is some overlap in the spatial coverage for regional models,
+we will create maps showing more detail in the overlapping regions.
+
+First, we will plot all regions and extract the legend.
+
+``` r
+#Plotting 
+reg <- fishmip_reg_rob |> 
+  #Plotting
+  ggplot()+
+  #Using colours of our tailored made colourmap
+  geom_sf(aes(fill = fill))+
+  #Use colours specified in the fill column, but label by region
+  scale_fill_identity(labels = fishmip_reg_rob$region, guide = "legend", 
+                      #Ensure regions are ordered the same way as colours used
+                      breaks = fishmip_reg_rob$fill)+
+  #Move legend to bottom
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.box.margin = margin(0, 0, 0, 0),
+        legend.text = element_text(margin = margin(r = 5)))+
+  #Split legend into four columns
+  guides(fill = guide_legend(ncol = 4))
+
+#Extracting legend from FishMIP regions
+leg <- get_legend(reg)
+
+#Checking map so far
+reg
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Our initial maps shows all FishMIP regions, but does not look great yet.
+We will use this as a guide to identify the areas where we will create
+the smaller maps. We will expand the following areas:  
+- Europe  
+- Brazil  
+- Australia and New Zealand  
+- East Antarctica
+
+We will use the base map above to create these smaller maps.
+
+### Europe
+
+``` r
+europe <- reg+
+  #We will increase transparency to see overlapping areas better
+  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")+
+  #Add world base map
+  geom_sf(data = world, fill = "#f9f9f5")+
+  #Focus on Europe. Note that we use coordinates in meters because data is reprojected
+  lims(x = c(-741458, 3251458), y = c(3256289, 6725154))+
+  #Add a border to map so it is easily identifiable
+  theme(panel.border = element_rect(colour = "#0077bb", linewidth = 2),
+        axis.text = element_blank(), axis.ticks = element_blank(),
+        plot.margin = margin(0, 0, 0, 0, unit = "cm"))
+
+#Create a shapefile with map limits
+eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154, ymin = 3156289), 
+                  crs = rob_proj) |> 
+  st_as_sfc()
+
+#Check map of Europe
+europe
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+### Brazil
+
+``` r
+brazil <- reg+
+  #We will increase transparency to see overlapping areas better
+  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")+
+  #Add world base map
+  geom_sf(data = world, fill = "#f9f9f5")+
+  #Focus on Brazil.
+  lims(x = c(-3537222, -3151458), y = c(-1206289, -400000))+
+  #Add a border to map so it is easily identifiable
+  theme(panel.border = element_rect(colour = "#cc6677", linewidth = 2),
+        axis.text = element_blank(), axis.ticks = element_blank())
+
+#Create a shapefile with map limits
+br_box <- st_bbox(c(xmin = -3537222, xmax = -3151458, ymax = -400000, ymin = -1206289),
+                  crs = rob_proj) |>
+  st_as_sfc()
+
+#Check map of Brazil
+brazil
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+### Australia and New Zealand
+
+``` r
+au_nz <- reg+
+  #We will increase transparency to see overlapping areas better
+  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")+
+  #Add world base map
+  geom_sf(data = world, fill = "#f9f9f5")+
+  #Focus on Australia and New Zealand
+  lims(x = c(10568611, 15500000), y = c(-5112577, -2600000))+
+  #Add a border to map so it is easily identifiable
+  theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
+        axis.text = element_blank(), axis.ticks = element_blank(),
+        plot.margin = margin(0, 0, 0, 0, unit = "cm"))
+
+#Create a shapefile with map limits
+au_nz_box <- st_bbox(c(xmin = 10468611, xmax = 15600000, ymax = -2500000, ymin = -5212577),
+                  crs = rob_proj) |>
+  st_as_sfc()
+
+#Check map
+au_nz
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+### Southern Ocean
+
+``` r
+so <- reg+
+  #We will increase transparency to see overlapping areas better
+  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")+
+  #Add world base map
+  geom_sf(data = world, fill = "#f9f9f5")+
+  #Focus on Australia and New Zealand
+  lims(x = c(4198611, 6800000), y = c(-7225154, -4712577))+
+  #Add a border to map so it is easily identifiable
+  theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
+        axis.text = element_blank(), axis.ticks = element_blank(),
+        plot.margin = margin(0, 0, 0, 0, unit = "cm"))
+
+#Create a shapefile with map limits
+so_box <- st_bbox(c(xmin = 4098611, xmax = 6900000, ymax = -4612577, ymin = -7325154),
+                  crs = rob_proj) |>
+  st_as_sfc()
+
+#Check map
+so
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+### Adding boundaries of inset maps into main map
+
+``` r
+main <- reg+
+  geom_sf(inherit.aes = T, aes(alpha = 0.4))+
+  geom_sf(data = world, fill = "#f9f9f5")+
+  geom_sf(data = eu_box, color = "#0077bb", fill = NA, linewidth = 0.5)+
+  geom_sf(data = au_nz_box, color = "#999933", fill = NA, linewidth = 0.5)+
+  geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)+
+  theme_bw()+
+  theme(legend.position = "none", 
+        panel.border = element_rect(colour = NA),
+        plot.margin = margin(-2.5, 3.5, -4.5, 3.5, unit = "cm"))
+
+main
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+inset_left <- plot_grid(europe, au_nz, nrow = 2)
+inset_right <- plot_grid(NULL, so, nrow = 2, rel_heights = c(0.75, 1))
+
+plot_grid(inset_left, main, inset_right, ncol = 3, rel_widths = c(0.3, 1, 0.3),
+          rel_heights = c(0.75, 1, 0.75))
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+\### Merging main map with inset maps
+
+``` r
+#Merging main map and insets
+main_inset <- ggdraw(main)+
+  draw_plot(au_nz, x = .75, y = 0.125, width = 0.25, height = 0.3)+
+  draw_plot(so, x = 0, y = 0.175, width = 0.225, height = 0.25)+
+  draw_plot(europe, x = .74, y = 0.55, width = 0.25, height = 0.25)
+
+#Adding legend
+final_map <- main_inset+
+  theme(plot.margin = margin(b = 3.25, t = -2.5, unit = "cm"))+
+  draw_plot(leg, x = 0, y = -0.475)
+
+#Checking final result
+final_map
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+The map above may not look great in your screen, but once it is saved to
+your local machine, it will plot correctly. However, you can change the
+code here to fit it to your needs.
+
+## Saving final map
+
+The final map can be saved to your local machine. We will save it as
+vector image so it still looks good even when expanded. You can also
+find a copy of this image in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
+
+``` r
+#Saving map
+ggsave("../Outputs/FishMIP_regional_models.svg", final_map, device = "svg")
+```
