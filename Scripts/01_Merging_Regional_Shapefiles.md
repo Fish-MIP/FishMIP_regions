@@ -8,6 +8,8 @@ Denisse Fierro Arcos
   libraries</a>
 - <a href="#loading-regional-shapefiles"
   id="toc-loading-regional-shapefiles">Loading regional shapefiles</a>
+  - <a href="#getting-list-of-directories"
+    id="toc-getting-list-of-directories">Getting list of directories</a>
   - <a href="#getting-list-of-lme-names-from-directory-paths"
     id="toc-getting-list-of-lme-names-from-directory-paths">Getting list of
     LME names from directory paths</a>
@@ -29,6 +31,7 @@ create maps or masks to extract Earth System Models (ESMs) outputs.
 library(dplyr)
 library(stringr)
 library(purrr)
+library(tidyr)
 #Spatial data
 library(sf)
 #Plotting data
@@ -47,6 +50,32 @@ to access this file.
 
 If you need access to regional shapefiles, please [email
 us](mailto:fishmip.coordinators@gmail.com).
+
+## Getting list of directories
+
+The name of the folders containing regional shapefiles contain the
+ecosystem models developed for that particular region. We will use this
+information to create two new columns in the final FishMIP regional
+models shapefile.
+
+``` r
+#Getting name of folders containing regional models
+reg <- list.dirs("../Shapefiles_Regions/", recursive = F, full.names = F)
+
+#Creating a table with ecosystem models available per region
+reg_info <- str_split(reg, "_", simplify = T) |>
+  data.frame() |> 
+  #Renaming columns
+  rename(region = X1, model_all = X2) |> 
+  #Replace "-" with a space in the region name
+  mutate(region = str_replace_all(region, "-", " "),
+         #Replace "-" with a comma in the ecosystem models column
+         models = str_replace_all(model_all, "-", ", ")) |> 
+  #Counting the number of ecosystem models available per region
+  separate_longer_delim(model_all, delim = "-") |> 
+  group_by(region, models) |> 
+  count(name = "number_models")
+```
 
 ## Getting list of LME names from directory paths
 
@@ -81,7 +110,12 @@ two
 regions <- region_paths |> 
   map(read_sf) |> 
   bind_rows() |> 
-  mutate(region = str_replace_all(region, "_", " "))
+  #Cleaning up names - Replace "_" for spaces " "
+  mutate(region = str_replace_all(region, "_", " ")) |> 
+  #Adding model names and number of ecosystem models available per region
+  left_join(reg_info, by = "region") |> 
+  #Moving geometry to the end
+  relocate(geometry, .after = number_models)
 ```
 
 ## Plotting merged regions in a map
@@ -105,7 +139,7 @@ ggplot()+
 
 ![](01_Merging_Regional_Shapefiles_files/figure-gfm/map-1.png)<!-- -->
 
-The merged shapefile includes 23 different regions, which matches the
+The merged shapefile includes 21 different regions, which matches the
 number of regional FishMIP models. We can now save this merged file.
 
 ``` r
@@ -116,7 +150,7 @@ if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
 regions |> 
-  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"))
+  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"), append = F)
 ```
 
 Remember, the final shapefile is also available in the [FishMIP THREDDS

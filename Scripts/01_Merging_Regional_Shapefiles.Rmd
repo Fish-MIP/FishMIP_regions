@@ -19,6 +19,7 @@ In this notebook, we will use shapefiles submitted by all FishMIP regional model
 library(dplyr)
 library(stringr)
 library(purrr)
+library(tidyr)
 #Spatial data
 library(sf)
 #Plotting data
@@ -31,9 +32,31 @@ library(rnaturalearth)
 Due to the total size of regional shapefiles, it is not possible to share them in this repository. However, the merged file is available in the FishMIP THREDDS server. Click [here](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.html) to access this file.  
   
 If you need access to regional shapefiles, please [email us](mailto:fishmip.coordinators@gmail.com).
+    
+## Getting list of directories 
+The name of the folders containing regional shapefiles contain the ecosystem models developed for that particular region. We will use this information to create two new columns in the final FishMIP regional models shapefile.  
+  
+```{r}
+#Getting name of folders containing regional models
+reg <- list.dirs("../Shapefiles_Regions/", recursive = F, full.names = F)
+
+#Creating a table with ecosystem models available per region
+reg_info <- str_split(reg, "_", simplify = T) |>
+  data.frame() |> 
+  #Renaming columns
+  rename(region = X1, model_all = X2) |> 
+  #Replace "-" with a space in the region name
+  mutate(region = str_replace_all(region, "-", " "),
+         #Replace "-" with a comma in the ecosystem models column
+         models = str_replace_all(model_all, "-", ", ")) |> 
+  #Counting the number of ecosystem models available per region
+  separate_longer_delim(model_all, delim = "-") |> 
+  group_by(region, models) |> 
+  count(name = "number_models")
+```
   
 ## Getting list of LME names from directory paths
-
+  
 ```{r shapefiles_dirs}
 #Getting a list of shapefiles in the folder containing the regional model boundaries
 region_paths <- list.files("../Shapefiles_Regions", pattern = ".shp$", recursive = T, full.names = T)
@@ -58,7 +81,11 @@ regions <- region_paths |>
   map(read_sf) |> 
   bind_rows() |> 
   #Cleaning up names - Replace "_" for spaces " "
-  mutate(region = str_replace_all(region, "_", " "))
+  mutate(region = str_replace_all(region, "_", " ")) |> 
+  #Adding model names and number of ecosystem models available per region
+  left_join(reg_info, by = "region") |> 
+  #Moving geometry to the end
+  relocate(geometry, .after = number_models)
 ```
     
 ## Plotting merged regions in a map
@@ -78,7 +105,7 @@ ggplot()+
   guides(fill = guide_legend(ncol = 4))
 ```
   
-The merged shapefile includes 23 different regions, which matches the number of regional FishMIP models. We can now save this merged file.  
+The merged shapefile includes 21 different regions, which matches the number of regional FishMIP models. We can now save this merged file.  
   
 ```{r shp_save, eval = F}
 #Location of folder for outputs
