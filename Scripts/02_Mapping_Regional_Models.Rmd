@@ -104,7 +104,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c(brewer.pal(7, "Set2"), brewer.pal(7, "Dark2"), brewer.pal(8, "Set1"))
+pal <- c(brewer.pal(8, "Set2"), brewer.pal(12, "Paired"))
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -125,21 +125,18 @@ reg <- fishmip_reg_rob |>
   #Plotting
   ggplot()+
   #Using colours of our tailored made colourmap
-  geom_sf(aes(fill = fill))+
-  #Use colours specified in the fill column, but label by region
-  scale_fill_identity(labels = fishmip_reg_rob$region, guide = "legend", 
-                      #Ensure regions are ordered the same way as colours used
-                      breaks = fishmip_reg_rob$fill)+
+  geom_sf(aes(fill = region), alpha = 0.5)+
+  geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  theme_bw()+
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.margin = margin(0, 0, 0, 0),
-        legend.text = element_text(margin = margin(r = 5)))+
+        legend.text = element_text(margin = margin(r = 5)),
+        panel.border = element_rect(colour = NA))+
   #Split legend into four columns
   guides(fill = guide_legend(ncol = 4))
-
-#Extracting legend from FishMIP regions
-leg <- get_legend(reg)
 
 #Checking map so far
 reg
@@ -240,7 +237,8 @@ au_nz
 ### Southern Ocean
   
 ```{r}
-so <- reg+
+# so <- 
+reg+
   #We will increase transparency to see overlapping areas better
   geom_sf(inherit.aes = T, aes(alpha = 0.3))+
   #Remove background
@@ -269,15 +267,9 @@ so
   
 ```{r}
 main <- reg+
-  geom_sf(inherit.aes = T, aes(alpha = 0.4))+
-  geom_sf(data = world, fill = "#f9f9f5")+
   geom_sf(data = eu_box, color = "#0077bb", fill = NA, linewidth = 0.5)+
   geom_sf(data = au_nz_box, color = "#999933", fill = NA, linewidth = 0.5)+
-  geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)+
-  theme_bw()+
-  theme(legend.position = "none", 
-        panel.border = element_rect(colour = NA),
-        plot.margin = margin(-2.5, 3.5, -4.5, 3.5, unit = "cm"))
+  geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)
 
 main
 ```
@@ -285,11 +277,12 @@ main
 
 
 ```{r}
-inset_left <- plot_grid(europe, au_nz, nrow = 2)
-inset_right <- plot_grid(NULL, so, nrow = 2, rel_heights = c(0.75, 1))
+# inset_left <- 
+plot_grid(NULL, main, plot_grid(NULL, europe, au_nz, so, NULL, NULL, nrow = 6), 
+          ncol = 3, rel_widths = c(0.1, 1., 0.25))
 
-plot_grid(inset_left, main, inset_right, ncol = 3, rel_widths = c(0.3, 1, 0.3),
-          rel_heights = c(0.75, 1, 0.75))
+ggsave("../test.pdf", device = "pdf")
+
 ```
 ### Merging main map with inset maps
   
@@ -297,8 +290,10 @@ plot_grid(inset_left, main, inset_right, ncol = 3, rel_widths = c(0.3, 1, 0.3),
 #Merging main map and insets
 main_inset <- ggdraw(main)+
   draw_plot(au_nz, x = .75, y = 0.125, width = 0.25, height = 0.3)+
-  draw_plot(so, x = 0, y = 0.175, width = 0.225, height = 0.25)+
-  draw_plot(europe, x = .74, y = 0.55, width = 0.25, height = 0.25)
+  draw_plot(so, x = .75, y = 0.45, width = 0.225, height = 0.25)+
+  draw_plot(europe, x = .74, y = 0.75, width = 0.25, height = 0.25)
+
+ggsave("../test.pdf", main_inset, device = "pdf", width = 15, height = 7, units = "cm")
 
 #Adding legend
 final_map <- main_inset+
