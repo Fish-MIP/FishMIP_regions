@@ -19,15 +19,16 @@ Denisse Fierro Arcos
     id="toc-mapping-fishmip-regional-models">Mapping FishMIP regional
     models</a>
     - <a href="#europe" id="toc-europe">Europe</a>
-    - <a href="#brazil" id="toc-brazil">Brazil</a>
     - <a href="#australia-and-new-zealand"
       id="toc-australia-and-new-zealand">Australia and New Zealand</a>
     - <a href="#southern-ocean" id="toc-southern-ocean">Southern Ocean</a>
     - <a href="#adding-boundaries-of-inset-maps-into-main-map"
       id="toc-adding-boundaries-of-inset-maps-into-main-map">Adding boundaries
       of inset maps into main map</a>
-  - <a href="#saving-final-map" id="toc-saving-final-map">Saving final
-    map</a>
+    - <a href="#merging-main-map-with-inset-maps"
+      id="toc-merging-main-map-with-inset-maps">Merging main map with inset
+      maps</a>
+  - <a href="#saving-maps" id="toc-saving-maps">Saving maps</a>
 
 # Introduction
 
@@ -65,6 +66,7 @@ library(dplyr)
     ##     intersect, setdiff, setequal, union
 
 ``` r
+library(stringr)
 #Spatial data
 library(sf)
 ```
@@ -135,25 +137,34 @@ fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_mode
 fishmip_reg
 ```
 
-    ## Simple feature collection with 22 features and 1 field
+    ## Simple feature collection with 20 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -69.8008 xmax: 180 ymax: 64.5
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 22 × 2
-    ##    region                                                               geometry
-    ##  * <chr>                                                      <MULTIPOLYGON [°]>
-    ##  1 Baltic Sea         (((23.5 64.5, 23.5 64.05521, 23.49948 64.05469, 23.49792 …
-    ##  2 Benguela           (((19.90119 -36.77948, 17.34643 -34.5195, 14.36752 -29.82…
-    ##  3 Brasil NE          (((-36.94482 -4.549031, -36.94233 -4.551432, -36.93993 -4…
-    ##  4 Central Pacific    (((-168.2779 -22.09492, -168.6017 -22.25041, -169.2678 -2…
-    ##  5 Chatham Rise       (((172 -45.33333, 172 -44.91667, 172 -44.5, 173.3333 -43.…
-    ##  6 Cook Strait        (((175.209 -40.5, 175.2088 -40.50062, 175.2087 -40.50105,…
-    ##  7 East Bass Strait   (((150.5 -36, 150.5 -39, 146.5 -39, 146.5 -38.78087, 146.…
-    ##  8 East Bearing Sea   (((-165.61 54.51, -165.61 54.52, -165.61 54.53, -165.59 5…
-    ##  9 East Scotian Shelf (((-60.0875 47.2625, -60.0875 47.25833, -60.075 47.25833,…
-    ## 10 Gulf Alaska        (((-166.2288 53.93614, -166.2306 53.93381, -166.2309 53.9…
-    ## # ℹ 12 more rows
+    ## # A tibble: 20 × 4
+    ##    region                 models               nmbr_md                  geometry
+    ##  * <chr>                  <chr>                  <int>        <MULTIPOLYGON [°]>
+    ##  1 Baltic Sea             EwE, Mizer                 2 (((23.5 64.5, 23.5 64.05…
+    ##  2 Benguela               Atlantis, EwE, OSMO…       3 (((19.90119 -36.77948, 1…
+    ##  3 Brasil NE              EcoSpace                   1 (((-36.94482 -4.549031, …
+    ##  4 Central South Pacific  Mizer                      1 (((-168.2779 -22.09492, …
+    ##  5 Chatham Rise           Atlantis, EwE, Mizer       3 (((172 -45.33333, 172 -4…
+    ##  6 Cook Strait            EwE                        1 (((175.209 -40.5, 175.20…
+    ##  7 East Bass Strait       EwE                        1 (((150.5 -36, 150.5 -39,…
+    ##  8 East Bering Sea        Mizer                      1 (((-165.61 54.51, -165.6…
+    ##  9 East Scotian Shelf     Mizer                      1 (((-60.0875 47.2625, -60…
+    ## 10 Gulf Alaska            Mizer                      1 (((-166.2288 53.93614, -…
+    ## 11 Hawaiian Longline      Mizer                      1 (((-150 40, -150 36, -12…
+    ## 12 Kerguelen EwE          EwE                        1 (((80 -56, 75 -56, 70 -5…
+    ## 13 Kerguelen Mizer        Mizer                      1 (((79.45 -49.95, 79.45 -…
+    ## 14 Mediterranean Sea      EwE                        1 (((29.05594 41.0923, 29.…
+    ## 15 North Humboldt         OSMOSE                     1 (((-77.3643 6, -77.3643 …
+    ## 16 North Sea              EwE, Mizer                 2 (((4.99375 62, 4.995313 …
+    ## 17 Prydz Bay              EwE, Mizer                 2 (((60 -67.40114, 60 -67.…
+    ## 18 SE Australia Atlantis  Atlantis                   1 (((117.8 -35.4699, 117.8…
+    ## 19 SE Australia Mizer     Mizer                      1 (((130.8023 -31.65674, 1…
+    ## 20 Tasman and Golden Bays Atlantis, EwE, Mizer       3 (((173.0022 -40.81916, 1…
 
 # Plotting map
 
@@ -183,7 +194,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c(brewer.pal(7, "Set2"), brewer.pal(7, "Dark2"), brewer.pal(8, "Set1"))
+pal <- c(brewer.pal(8, "Set2"), brewer.pal(12, "Paired"))
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -206,21 +217,18 @@ reg <- fishmip_reg_rob |>
   #Plotting
   ggplot()+
   #Using colours of our tailored made colourmap
-  geom_sf(aes(fill = fill))+
-  #Use colours specified in the fill column, but label by region
-  scale_fill_identity(labels = fishmip_reg_rob$region, guide = "legend", 
-                      #Ensure regions are ordered the same way as colours used
-                      breaks = fishmip_reg_rob$fill)+
+  geom_sf(aes(fill = region), alpha = 0.5)+
+  geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  theme_bw()+
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.margin = margin(0, 0, 0, 0),
-        legend.text = element_text(margin = margin(r = 5)))+
+        legend.text = element_text(margin = margin(r = 5)),
+        panel.border = element_rect(colour = NA))+
   #Split legend into four columns
   guides(fill = guide_legend(ncol = 4))
-
-#Extracting legend from FishMIP regions
-leg <- get_legend(reg)
 
 #Checking map so far
 reg
@@ -243,7 +251,7 @@ We will use the base map above to create these smaller maps.
 ``` r
 europe <- reg+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
   #Remove background
   theme_bw()+
   #Remove legend
@@ -268,71 +276,72 @@ europe
 
 ![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-### Brazil
-
-``` r
-brazil <- reg+
-  #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
-  #Remove background
-  theme_bw()+
-  #Remove legend
-  theme(legend.position = "none")+
-  #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
-  #Focus on Brazil.
-  lims(x = c(-3537222, -3151458), y = c(-1206289, -400000))+
-  #Add a border to map so it is easily identifiable
-  theme(panel.border = element_rect(colour = "#cc6677", linewidth = 2),
-        axis.text = element_blank(), axis.ticks = element_blank())
-
-#Create a shapefile with map limits
-br_box <- st_bbox(c(xmin = -3537222, xmax = -3151458, ymax = -400000, ymin = -1206289),
-                  crs = rob_proj) |>
-  st_as_sfc()
-
-#Check map of Brazil
-brazil
-```
-
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
 ### Australia and New Zealand
 
+Because one of the regions in New Zealand crosses the international date
+line, we will show this area in an unprojected map.
+
 ``` r
-au_nz <- reg+
+au_nz <- fishmip_reg %>%
+  #Switching to 0-360 degrees longitude
+  st_shift_longitude() %>%
+  ggplot()+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(aes(fill = region), alpha = 0.5)+
+  #Add world base map
+  geom_sf(inherit.aes = F, data = world, fill = "#f9f9f5", show.legend = F)+
+  #Focus on Australia and New Zealand
+  lims(x = c(115, 200), y = c(-50, -23))+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")
+
+#Adding Bass Strait on top so it is easier to see
+#Extract Bass Strait region
+Tas <- fishmip_reg %>% 
+  filter(str_detect(region, "Bass")) %>% 
+  mutate(fill = "#E5C494")
+
+#Plot Bass Strait over the original AU/NZ map
+au_nz <- au_nz+
+  geom_sf(inherit.aes = F, data = Tas, aes(fill = region), alpha = 0.5)+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
   #Remove background
   theme_bw()+
   #Remove legend
   theme(legend.position = "none")+
-  #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
-  #Focus on Australia and New Zealand
-  lims(x = c(10568611, 15500000), y = c(-5112577, -2600000))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
+```
 
+    ## Scale for fill is already present.
+    ## Adding another scale for fill, which will replace the existing scale.
+
+``` r
 #Create a shapefile with map limits
-au_nz_box <- st_bbox(c(xmin = 10468611, xmax = 15600000, ymax = -2500000, ymin = -5212577),
-                  crs = rob_proj) |>
-  st_as_sfc()
+au_nz_box <- st_union(st_bbox(c(xmin = 115, xmax = 180, ymax = -23, ymin = -50),
+                              crs = 4326) %>% st_as_sfc(),
+                      st_bbox(c(xmin = -180, xmax = 200, ymax = -23, ymin = -50),
+                              crs = 4326) %>%  st_as_sfc()) %>% 
+  #Projecting to Robinson
+  st_transform(rob_proj)
 
 #Check map
 au_nz
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ### Southern Ocean
 
 ``` r
 so <- reg+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
   #Remove background
   theme_bw()+
   #Remove legend
@@ -355,67 +364,68 @@ so_box <- st_bbox(c(xmin = 4098611, xmax = 6900000, ymax = -4612577, ymin = -732
 so
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ### Adding boundaries of inset maps into main map
 
 ``` r
 main <- reg+
-  geom_sf(inherit.aes = T, aes(alpha = 0.4))+
-  geom_sf(data = world, fill = "#f9f9f5")+
   geom_sf(data = eu_box, color = "#0077bb", fill = NA, linewidth = 0.5)+
   geom_sf(data = au_nz_box, color = "#999933", fill = NA, linewidth = 0.5)+
-  geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)+
-  theme_bw()+
-  theme(legend.position = "none", 
-        panel.border = element_rect(colour = NA),
-        plot.margin = margin(-2.5, 3.5, -4.5, 3.5, unit = "cm"))
+  geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)
 
 main
+```
+
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+# inset_left <- 
+plot_grid(NULL, main, plot_grid(NULL, europe, au_nz, so, NULL, NULL, nrow = 6), 
+          ncol = 3, rel_widths = c(0.1, 1., 0.25))
 ```
 
 ![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
-inset_left <- plot_grid(europe, au_nz, nrow = 2)
-inset_right <- plot_grid(NULL, so, nrow = 2, rel_heights = c(0.75, 1))
-
-plot_grid(inset_left, main, inset_right, ncol = 3, rel_widths = c(0.3, 1, 0.3),
-          rel_heights = c(0.75, 1, 0.75))
+ggsave("../test.pdf", device = "pdf")
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
-\### Merging main map with inset maps
+    ## Saving 7 x 5 in image
+
+### Merging main map with inset maps
 
 ``` r
 #Merging main map and insets
-main_inset <- ggdraw(main)+
-  draw_plot(au_nz, x = .75, y = 0.125, width = 0.25, height = 0.3)+
-  draw_plot(so, x = 0, y = 0.175, width = 0.225, height = 0.25)+
-  draw_plot(europe, x = .74, y = 0.55, width = 0.25, height = 0.25)
+final_map <- ggdraw(main)+
+  draw_plot(au_nz, x = .75, y = 0.675, width = 0.22, height = 0.3)+
+  draw_plot(so, x = .7, y = 0.36, width = 0.33, height = 0.325)+
+  draw_plot(europe, x = .72, y = 0.04, width = 0.3, height = 0.3)
 
-#Adding legend
-final_map <- main_inset+
-  theme(plot.margin = margin(b = 3.25, t = -2.5, unit = "cm"))+
-  draw_plot(leg, x = 0, y = -0.475)
+final_map <- final_map+
+  theme(plot.margin = margin(l = -5, unit = "cm"))
 
 #Checking final result
 final_map
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 The map above may not look great in your screen, but once it is saved to
 your local machine, it will plot correctly. However, you can change the
 code here to fit it to your needs.
 
-## Saving final map
+## Saving maps
 
 The final map can be saved to your local machine. We will save it as
 vector image so it still looks good even when expanded. You can also
-find a copy of this image in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
+find a copy of this image in the [FishMIP THREDDS
+server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 
 ``` r
-#Saving map
-ggsave("../Outputs/FishMIP_regional_models.svg", final_map, device = "svg")
+#Saving final map
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", width = 22.5, height = 10, units = "cm")
+
+#Saving main map with just regions and no insets
+ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
 ```

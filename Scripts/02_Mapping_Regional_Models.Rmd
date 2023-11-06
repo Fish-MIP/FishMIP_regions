@@ -23,6 +23,7 @@ library(thredds)
 library(curl)
 #Manipulating data
 library(dplyr)
+library(stringr)
 #Spatial data
 library(sf)
 #Base map
@@ -155,7 +156,7 @@ We will use the base map above to create these smaller maps.
 ```{r}
 europe <- reg+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
   #Remove background
   theme_bw()+
   #Remove legend
@@ -178,57 +179,52 @@ eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154, ymin = 31562
 europe
 ```
   
-### Brazil
-  
-```{r}
-brazil <- reg+
-  #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
-  #Remove background
-  theme_bw()+
-  #Remove legend
-  theme(legend.position = "none")+
-  #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
-  #Focus on Brazil.
-  lims(x = c(-3537222, -3151458), y = c(-1206289, -400000))+
-  #Add a border to map so it is easily identifiable
-  theme(panel.border = element_rect(colour = "#cc6677", linewidth = 2),
-        axis.text = element_blank(), axis.ticks = element_blank())
-
-#Create a shapefile with map limits
-br_box <- st_bbox(c(xmin = -3537222, xmax = -3151458, ymax = -400000, ymin = -1206289),
-                  crs = rob_proj) |>
-  st_as_sfc()
-
-#Check map of Brazil
-brazil
-```
-  
-  
 ### Australia and New Zealand
+Because one of the regions in New Zealand crosses the international date line, we will show this area in an unprojected map.  
   
 ```{r}
-au_nz <- reg+
+au_nz <- fishmip_reg %>%
+  #Switching to 0-360 degrees longitude
+  st_shift_longitude() %>%
+  ggplot()+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(aes(fill = region), alpha = 0.5)+
+  #Add world base map
+  geom_sf(inherit.aes = F, data = world, fill = "#f9f9f5", show.legend = F)+
+  #Focus on Australia and New Zealand
+  lims(x = c(115, 200), y = c(-50, -23))+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  #Remove background
+  theme_bw()+
+  #Remove legend
+  theme(legend.position = "none")
+
+#Adding Bass Strait on top so it is easier to see
+#Extract Bass Strait region
+Tas <- fishmip_reg %>% 
+  filter(str_detect(region, "Bass")) %>% 
+  mutate(fill = "#E5C494")
+
+#Plot Bass Strait over the original AU/NZ map
+au_nz <- au_nz+
+  geom_sf(inherit.aes = F, data = Tas, aes(fill = region), alpha = 0.5)+
+  scale_fill_manual(values = fishmip_reg_rob$fill)+
   #Remove background
   theme_bw()+
   #Remove legend
   theme(legend.position = "none")+
-  #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
-  #Focus on Australia and New Zealand
-  lims(x = c(10568611, 15500000), y = c(-5112577, -2600000))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-au_nz_box <- st_bbox(c(xmin = 10468611, xmax = 15600000, ymax = -2500000, ymin = -5212577),
-                  crs = rob_proj) |>
-  st_as_sfc()
+au_nz_box <- st_union(st_bbox(c(xmin = 115, xmax = 180, ymax = -23, ymin = -50),
+                              crs = 4326) %>% st_as_sfc(),
+                      st_bbox(c(xmin = -180, xmax = 200, ymax = -23, ymin = -50),
+                              crs = 4326) %>%  st_as_sfc()) %>% 
+  #Projecting to Robinson
+  st_transform(rob_proj)
 
 #Check map
 au_nz
@@ -237,10 +233,9 @@ au_nz
 ### Southern Ocean
   
 ```{r}
-# so <- 
-reg+
+so <- reg+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.3))+
+  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
   #Remove background
   theme_bw()+
   #Remove legend
@@ -288,17 +283,13 @@ ggsave("../test.pdf", device = "pdf")
   
 ```{r}
 #Merging main map and insets
-main_inset <- ggdraw(main)+
-  draw_plot(au_nz, x = .75, y = 0.125, width = 0.25, height = 0.3)+
-  draw_plot(so, x = .75, y = 0.45, width = 0.225, height = 0.25)+
-  draw_plot(europe, x = .74, y = 0.75, width = 0.25, height = 0.25)
+final_map <- ggdraw(main)+
+  draw_plot(au_nz, x = .75, y = 0.675, width = 0.22, height = 0.3)+
+  draw_plot(so, x = .7, y = 0.36, width = 0.33, height = 0.325)+
+  draw_plot(europe, x = .72, y = 0.04, width = 0.3, height = 0.3)
 
-ggsave("../test.pdf", main_inset, device = "pdf", width = 15, height = 7, units = "cm")
-
-#Adding legend
-final_map <- main_inset+
-  theme(plot.margin = margin(b = 3.25, t = -2.5, unit = "cm"))+
-  draw_plot(leg, x = 0, y = -0.475)
+final_map <- final_map+
+  theme(plot.margin = margin(l = -5, unit = "cm"))
 
 #Checking final result
 final_map
@@ -306,12 +297,15 @@ final_map
   
 The map above may not look great in your screen, but once it is saved to your local machine, it will plot correctly. However, you can change the code here to fit it to your needs.    
   
-## Saving final map
+## Saving maps
 The final map can be saved to your local machine. We will save it as vector image so it still looks good even when expanded. You can also find a copy of this image in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).  
   
 ```{r, eval = F}
-#Saving map
-ggsave("../Outputs/FishMIP_regional_models.svg", final_map, device = "svg")
+#Saving final map
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", width = 22.5, height = 10, units = "cm")
+
+#Saving main map with just regions and no insets
+ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
 ```
 
 
