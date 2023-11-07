@@ -5,3 +5,4 @@ If you are interested in submitting your regional model to the FishMIP group, pl
   
 A copy of shapefile including all FishMIP regional model boundaries can be found in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.html).  
   
+[Fish-MIP regional models](Outputs/FishMIP_regional_models.pdf)
