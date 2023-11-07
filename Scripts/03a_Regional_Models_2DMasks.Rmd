@@ -19,13 +19,11 @@ In this notebook, we will show how to create a raster mask that can be used to e
 library(sf)
 library(terra)
 
-#Manipulating data
+#Manipulating and plotting data
 library(tidyverse)
 
 #Base map
 library(rnaturalearth)
-#Plotting maps
-library(ggplot2)
 ```
   
 # Loading Southern Ocean shapefile

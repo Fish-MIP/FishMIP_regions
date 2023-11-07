@@ -39,7 +39,7 @@ library(terra)
     ## terra 1.7.18
 
 ``` r
-#Manipulating data
+#Manipulating and plotting data
 library(tidyverse)
 ```
 
@@ -59,8 +59,6 @@ library(tidyverse)
 ``` r
 #Base map
 library(rnaturalearth)
-#Plotting maps
-library(ggplot2)
 ```
 
 # Loading Southern Ocean shapefile
