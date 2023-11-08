@@ -282,9 +282,9 @@ Because one of the regions in New Zealand crosses the international date
 line, we will show this area in an unprojected map.
 
 ``` r
-au_nz <- fishmip_reg  |> 
+au_nz <- fishmip_reg |>
   #Switching to 0-360 degrees longitude
-  st_shift_longitude() |> 
+  st_shift_longitude() |>
   ggplot()+
   #We will increase transparency to see overlapping areas better
   geom_sf(aes(fill = region), alpha = 0.5)+
@@ -300,8 +300,8 @@ au_nz <- fishmip_reg  |>
 
 #Adding Bass Strait on top so it is easier to see
 #Extract Bass Strait region
-Tas <- fishmip_reg |>  
-  filter(str_detect(region, "Bass")) |>  
+Tas <- fishmip_reg |> 
+  filter(str_detect(region, "Bass")) |> 
   mutate(fill = "#E5C494")
 
 #Plot Bass Strait over the original AU/NZ map
@@ -324,9 +324,9 @@ au_nz <- au_nz+
 ``` r
 #Create a shapefile with map limits
 au_nz_box <- st_union(st_bbox(c(xmin = 115, xmax = 180, ymax = -23, ymin = -50),
-                              crs = 4326) |>  st_as_sfc(),
+                              crs = 4326) |> st_as_sfc(),
                       st_bbox(c(xmin = -180, xmax = 200, ymax = -23, ymin = -50),
-                              crs = 4326) |>   st_as_sfc()) |>  
+                              crs = 4326) |>  st_as_sfc()) |> 
   #Projecting to Robinson
   st_transform(rob_proj)
 
@@ -379,20 +379,6 @@ main
 
 ![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-``` r
-# inset_left <- 
-plot_grid(NULL, main, plot_grid(NULL, europe, au_nz, so, NULL, NULL, nrow = 6), 
-          ncol = 3, rel_widths = c(0.1, 1., 0.25))
-```
-
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
-``` r
-ggsave("../test.pdf", device = "pdf")
-```
-
-    ## Saving 7 x 5 in image
-
 ### Merging main map with inset maps
 
 ``` r
@@ -409,7 +395,7 @@ final_map <- final_map+
 final_map
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 The map above may not look great in your screen, but once it is saved to
 your local machine, it will plot correctly. However, you can change the

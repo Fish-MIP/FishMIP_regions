@@ -268,17 +268,7 @@ main <- reg+
 
 main
 ```
-
-
-
-```{r}
-# inset_left <- 
-plot_grid(NULL, main, plot_grid(NULL, europe, au_nz, so, NULL, NULL, nrow = 6), 
-          ncol = 3, rel_widths = c(0.1, 1., 0.25))
-
-ggsave("../test.pdf", device = "pdf")
-
-```
+  
 ### Merging main map with inset maps
   
 ```{r}
