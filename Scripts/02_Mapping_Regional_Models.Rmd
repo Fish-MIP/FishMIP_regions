@@ -105,7 +105,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c(brewer.pal(8, "Set2"), brewer.pal(12, "Paired"))
+pal <- c(brewer.pal(8, "Set2"), "#bb5566", "#ddaa33", brewer.pal(12, "Paired"))
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -145,7 +145,6 @@ reg
   
 Our initial maps shows all FishMIP regions, but does not look great yet. We will use this as a guide to identify the areas where we will create the smaller maps. We will expand the following areas:  
 - Europe  
-- Brazil  
 - Australia and New Zealand  
 - East Antarctica  
   
@@ -243,14 +242,14 @@ so <- reg+
   #Add world base map
   geom_sf(data = world, fill = "#f9f9f5")+
   #Focus on Australia and New Zealand
-  lims(x = c(4198611, 6800000), y = c(-7225154, -4712577))+
+  lims(x = c(3200000, 8800000), y = c(-7225154, -4712577))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 4098611, xmax = 6900000, ymax = -4612577, ymin = -7325154),
+so_box <- st_bbox(c(xmin = 3100000, xmax = 8900000, ymax = -4612577, ymin = -7325154),
                   crs = rob_proj) |>
   st_as_sfc()
 
@@ -275,7 +274,7 @@ main
 #Merging main map and insets
 final_map <- ggdraw(main)+
   draw_plot(au_nz, x = .75, y = 0.675, width = 0.22, height = 0.3)+
-  draw_plot(so, x = .7, y = 0.36, width = 0.33, height = 0.325)+
+  draw_plot(so, x = .765, y = 0.38, width = 0.20, height = 0.30)+
   draw_plot(europe, x = .72, y = 0.04, width = 0.3, height = 0.3)
 
 final_map <- final_map+
