@@ -105,7 +105,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c(brewer.pal(8, "Set2"), "#bb5566", "#ddaa33", brewer.pal(12, "Paired"))
+pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
+         "#332288", "#009988", "#117733", "#997700", "#aa4499")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -202,7 +203,7 @@ au_nz <- fishmip_reg |>
 #Extract Bass Strait region
 Tas <- fishmip_reg |> 
   filter(str_detect(region, "Bass")) |> 
-  mutate(fill = "#E5C494")
+  mutate(fill = "#CAB2D6")
 
 #Plot Bass Strait over the original AU/NZ map
 au_nz <- au_nz+
@@ -273,9 +274,9 @@ main
 ```{r}
 #Merging main map and insets
 final_map <- ggdraw(main)+
-  draw_plot(au_nz, x = .75, y = 0.675, width = 0.22, height = 0.3)+
-  draw_plot(so, x = .765, y = 0.38, width = 0.20, height = 0.30)+
-  draw_plot(europe, x = .72, y = 0.04, width = 0.3, height = 0.3)
+  draw_plot(au_nz, x = .805, y = 0.675, width = 0.185, height = 0.3)+
+  draw_plot(so, x = .815, y = 0.38, width = 0.175, height = 0.30)+
+  draw_plot(europe, x = .75, y = 0.04, width = 0.3, height = 0.3)
 
 final_map <- final_map+
   theme(plot.margin = margin(l = -5, unit = "cm"))
@@ -291,7 +292,8 @@ The final map can be saved to your local machine. We will save it as vector imag
   
 ```{r, eval = F}
 #Saving final map
-ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", width = 22.5, height = 10, units = "cm")
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", 
+       width = 22.5, height = 10, units = "cm")
 
 #Saving main map with just regions and no insets
 ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")

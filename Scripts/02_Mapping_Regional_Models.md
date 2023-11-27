@@ -137,34 +137,25 @@ fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_mode
 fishmip_reg
 ```
 
-    ## Simple feature collection with 20 features and 3 fields
+    ## Simple feature collection with 26 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
-    ## Bounding box:  xmin: -180 ymin: -69.8008 xmax: 180 ymax: 64.5
+    ## Bounding box:  xmin: -180 ymin: -71.9699 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 20 × 4
-    ##    region                 models               nmbr_md                  geometry
-    ##  * <chr>                  <chr>                  <int>        <MULTIPOLYGON [°]>
-    ##  1 Baltic Sea             EwE, Mizer                 2 (((23.5 64.5, 23.5 64.05…
-    ##  2 Benguela               Atlantis, EwE, OSMO…       3 (((19.90119 -36.77948, 1…
-    ##  3 Brasil NE              EcoSpace                   1 (((-36.94482 -4.549031, …
-    ##  4 Central South Pacific  Mizer                      1 (((-168.2779 -22.09492, …
-    ##  5 Chatham Rise           Atlantis, EwE, Mizer       3 (((172 -45.33333, 172 -4…
-    ##  6 Cook Strait            EwE                        1 (((175.209 -40.5, 175.20…
-    ##  7 East Bass Strait       EwE                        1 (((150.5 -36, 150.5 -39,…
-    ##  8 East Bering Sea        Mizer                      1 (((-165.61 54.51, -165.6…
-    ##  9 East Scotian Shelf     Mizer                      1 (((-60.0875 47.2625, -60…
-    ## 10 Gulf Alaska            Mizer                      1 (((-166.2288 53.93614, -…
-    ## 11 Hawaiian Longline      Mizer                      1 (((-150 40, -150 36, -12…
-    ## 12 Kerguelen EwE          EwE                        1 (((80 -56, 75 -56, 70 -5…
-    ## 13 Kerguelen Mizer        Mizer                      1 (((79.45 -49.95, 79.45 -…
-    ## 14 Mediterranean Sea      EwE                        1 (((29.05594 41.0923, 29.…
-    ## 15 North Humboldt         OSMOSE                     1 (((-77.3643 6, -77.3643 …
-    ## 16 North Sea              EwE, Mizer                 2 (((4.99375 62, 4.995313 …
-    ## 17 Prydz Bay              EwE, Mizer                 2 (((60 -67.40114, 60 -67.…
-    ## 18 SE Australia Atlantis  Atlantis                   1 (((117.8 -35.4699, 117.8…
-    ## 19 SE Australia Mizer     Mizer                      1 (((130.8023 -31.65674, 1…
-    ## 20 Tasman and Golden Bays Atlantis, EwE, Mizer       3 (((173.0022 -40.81916, 1…
+    ## # A tibble: 26 × 4
+    ##    region                models                nmbr_md                  geometry
+    ##  * <chr>                 <chr>                   <int>        <MULTIPOLYGON [°]>
+    ##  1 Baltic Sea EwE        EwE                         1 (((23.5 64.5, 23.5 64.05…
+    ##  2 Baltic Sea Mizer      Mizer                       1 (((20.5847 54.93254, 20.…
+    ##  3 Benguela              Atlantis, EwE, OSMOSE       3 (((19.90119 -36.77948, 1…
+    ##  4 Brasil NE             EcoSpace                    1 (((-36.94482 -4.549031, …
+    ##  5 Central North Pacific ECOTRAN                     1 (((-140 10, -180 10, -18…
+    ##  6 Central South Pacific Mizer                       1 (((-168.2779 -22.09492, …
+    ##  7 Chatham Rise          Atlantis, EwE, Mizer        3 (((172 -45.33333, 172 -4…
+    ##  8 Cook Strait           EwE                         1 (((175.209 -40.5, 175.20…
+    ##  9 East Antarctica       Atlantis                    1 (((81.87166 -53.63183, 1…
+    ## 10 East Bass Strait      EwE                         1 (((150.5 -36, 150.5 -39,…
+    ## # ℹ 16 more rows
 
 # Plotting map
 
@@ -194,7 +185,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c(brewer.pal(8, "Set2"), brewer.pal(12, "Paired"))
+pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
+         "#332288", "#009988", "#117733", "#997700", "#aa4499")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -240,7 +232,6 @@ Our initial maps shows all FishMIP regions, but does not look great yet.
 We will use this as a guide to identify the areas where we will create
 the smaller maps. We will expand the following areas:  
 - Europe  
-- Brazil  
 - Australia and New Zealand  
 - East Antarctica
 
@@ -302,7 +293,7 @@ au_nz <- fishmip_reg |>
 #Extract Bass Strait region
 Tas <- fishmip_reg |> 
   filter(str_detect(region, "Bass")) |> 
-  mutate(fill = "#E5C494")
+  mutate(fill = "#CAB2D6")
 
 #Plot Bass Strait over the original AU/NZ map
 au_nz <- au_nz+
@@ -349,14 +340,14 @@ so <- reg+
   #Add world base map
   geom_sf(data = world, fill = "#f9f9f5")+
   #Focus on Australia and New Zealand
-  lims(x = c(4198611, 6800000), y = c(-7225154, -4712577))+
+  lims(x = c(3200000, 8800000), y = c(-7225154, -4712577))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 4098611, xmax = 6900000, ymax = -4612577, ymin = -7325154),
+so_box <- st_bbox(c(xmin = 3100000, xmax = 8900000, ymax = -4612577, ymin = -7325154),
                   crs = rob_proj) |>
   st_as_sfc()
 
@@ -384,9 +375,9 @@ main
 ``` r
 #Merging main map and insets
 final_map <- ggdraw(main)+
-  draw_plot(au_nz, x = .75, y = 0.675, width = 0.22, height = 0.3)+
-  draw_plot(so, x = .7, y = 0.36, width = 0.33, height = 0.325)+
-  draw_plot(europe, x = .72, y = 0.04, width = 0.3, height = 0.3)
+  draw_plot(au_nz, x = .805, y = 0.675, width = 0.185, height = 0.3)+
+  draw_plot(so, x = .815, y = 0.38, width = 0.175, height = 0.30)+
+  draw_plot(europe, x = .75, y = 0.04, width = 0.3, height = 0.3)
 
 final_map <- final_map+
   theme(plot.margin = margin(l = -5, unit = "cm"))
@@ -410,7 +401,8 @@ server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 
 ``` r
 #Saving final map
-ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", width = 22.5, height = 10, units = "cm")
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", 
+       width = 22.5, height = 10, units = "cm")
 
 #Saving main map with just regions and no insets
 ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
