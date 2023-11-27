@@ -86,7 +86,7 @@ fishmip_reg
 ```
   
 # Plotting map
-Since we removed the Southern Ocean region, we have 22 polygons left. However, we will need to apply some changes to our datasets to create publication ready maps.  
+Since we removed the Southern Ocean region, we have `r nrow(fishmip_reg)` polygons left. However, we will need to apply some changes to our datasets to create publication ready maps.  
   
 ## Data preparation  
 We will use a Robinson projection for our map, so we need to reproject our shapefile. A reprojection also needs to be applied to our base world map.  

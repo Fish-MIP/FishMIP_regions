@@ -159,7 +159,7 @@ fishmip_reg
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 22 polygons left.
+Since we removed the Southern Ocean region, we have 26 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
