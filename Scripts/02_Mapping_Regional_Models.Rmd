@@ -106,7 +106,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
-         "#332288", "#009988", "#117733", "#997700", "#aa4499")
+         "#ee7733", "#332288", "#009988", "#66ccee", "#117733", 
+         "#997700", "#aa4499")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
