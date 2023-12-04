@@ -66,7 +66,7 @@ region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
   
 ## Loading regions
 
-As of November 2023, there are `r length(reg)` regional FishMIP models. We will use the boundaries for all these regions to create a single shapefile that includes all FishMIP regional models. Having a single file is useful to create maps showing all regional models easily. This file can also be used to create masks and extract data from Earth System Models (ESMs).  
+As of December 2023, there are `r length(reg)` regional FishMIP models. We will use the boundaries for all these regions to create a single shapefile that includes all FishMIP regional models. Having a single file is useful to create maps showing all regional models easily. This file can also be used to create masks and extract data from Earth System Models (ESMs).  
   
 The regional shapefiles used here have been previously standardised, so they are easier to merge. All shapefiles now have the following characteristics:  
 - Longitudes range from $-180^{\circ}$ to $180^{\circ}$  
