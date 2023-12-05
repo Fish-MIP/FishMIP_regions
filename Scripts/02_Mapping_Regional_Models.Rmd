@@ -106,8 +106,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
-         "#ee7733", "#332288", "#009988", "#66ccee", "#117733", 
-         "#997700", "#aa4499")
+         "#ee7733", "#332288", "#ccddaa", "#009988", "#66ccee", 
+         "#117733", "#997700", "#aa4499")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -291,7 +291,7 @@ The map above may not look great in your screen, but once it is saved to your lo
 ## Saving maps
 The final map can be saved to your local machine. We will save it as vector image so it still looks good even when expanded. You can also find a copy of this image in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).  
   
-```{r, eval = F}
+```{r}
 #Saving final map
 ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", 
        width = 22.5, height = 10, units = "cm")

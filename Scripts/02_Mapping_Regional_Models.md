@@ -137,12 +137,12 @@ fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_mode
 fishmip_reg
 ```
 
-    ## Simple feature collection with 26 features and 3 fields
+    ## Simple feature collection with 29 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -71.9699 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 26 × 4
+    ## # A tibble: 29 × 4
     ##    region                models                nmbr_md                  geometry
     ##  * <chr>                 <chr>                   <int>        <MULTIPOLYGON [°]>
     ##  1 Baltic Sea EwE        EwE                         1 (((23.5 64.5, 23.5 64.05…
@@ -155,11 +155,11 @@ fishmip_reg
     ##  8 Cook Strait           EwE                         1 (((175.209 -40.5, 175.20…
     ##  9 East Antarctica       Atlantis                    1 (((81.87166 -53.63183, 1…
     ## 10 East Bass Strait      EwE                         1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 16 more rows
+    ## # ℹ 19 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 26 polygons left.
+Since we removed the Southern Ocean region, we have 29 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -186,7 +186,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
-         "#332288", "#009988", "#117733", "#997700", "#aa4499")
+         "#ee7733", "#332288", "#ccddaa", "#009988", "#66ccee", 
+         "#117733", "#997700", "#aa4499")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
