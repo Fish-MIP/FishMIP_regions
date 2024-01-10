@@ -120,7 +120,7 @@ fishmip_reg_rob <- fishmip_reg |>
 ## Mapping FishMIP regional models
 Since there is some overlap in the spatial coverage for regional models, we will create maps showing more detail in the overlapping regions.  
   
-First, we will plot all regions and extract the legend.   
+First, we will plot all regional models. We will use this as the main map.  
   
 ```{r}
 #Plotting 

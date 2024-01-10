@@ -202,7 +202,8 @@ fishmip_reg_rob <- fishmip_reg |>
 Since there is some overlap in the spatial coverage for regional models,
 we will create maps showing more detail in the overlapping regions.
 
-First, we will plot all regions and extract the legend.
+First, we will plot all regional models. We will use this as the main
+map.
 
 ``` r
 #Plotting 
@@ -408,3 +409,5 @@ ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf
 #Saving main map with just regions and no insets
 ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
 ```
+
+    ## Saving 7 x 5 in image
