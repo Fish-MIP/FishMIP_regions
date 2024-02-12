@@ -12,14 +12,14 @@ In this notebook, we will create a diagram for the workflow that regional modell
   
 ## Loading libraries
   
-```{r}
+```{r, warning = F, echo = F}
 library(DiagrammeR)
 library(DiagrammeRsvg)
 ```
 
 ## Designing workflow
   
-```{r }
+```{r, echo = F}
 grViz("digraph git_basics {
 graph [
       margin = '0,0'
@@ -37,6 +37,7 @@ node [
       fillcolor = 'white'
       fontname = 'Helvetica,Arial,sans-serif'
       fontsize = 20
+      width = 4
       ]
       
 edge [
@@ -60,7 +61,7 @@ Step_1 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 			template<br/>
 			</td> </tr>
 		</table>>]
-Step_n [label = 'Is model spatial?' fillcolor = '#f6b979']
+Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979']
 Step_2 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 2:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Visualise and extract input<br/>
@@ -72,12 +73,14 @@ Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 			<tr> <td bgcolor = '#92bde4'> <b>Step 3:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Determine if further downscaling<br/>
 			 is needed<br/>
+			<br/>
 			</td> </tr>
 		</table>>]
 Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Match and extract fishing effort<br/>
 			groupings to force your model<br/>
+			<br/>
 			</td> </tr>
 		</table>>
 		tooltip = 'Step 4:']
@@ -99,14 +102,15 @@ Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Output standard variables to<br/>
-			compare with observations and<br/>
-			across models over time/space<br/>
+			compare with data and across<br/>
+			models over time/space<br/>
 			</td> </tr>
 		</table>>]
 Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 8:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Quality control checks and upload<br/>
 			to FishMIP server<br/>
+			<br/>
 			</td> </tr>
 		</table>>]
 
