@@ -265,7 +265,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 27 × 2
+    ## # A tibble: 30 × 2
     ##       id region               
     ##    <int> <chr>                
     ##  1     1 Baltic Sea EwE       
@@ -278,7 +278,7 @@ reg_keys
     ##  8     8 Cook Strait          
     ##  9     9 East Antarctica      
     ## 10    10 East Bass Strait     
-    ## # ℹ 17 more rows
+    ## # ℹ 20 more rows
 
 ## How to use raster mask
 
@@ -378,7 +378,7 @@ mask_df <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |>
   filter(region == "East Antarctica")
 ```
 
-    ## Rows: 22988 Columns: 4
+    ## Rows: 23097 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -404,11 +404,11 @@ You can also apply the mask to extract all data at once.
 
 ``` r
 #Apply mask to ESM data
-extract_df_all <-read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
+extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 22988 Columns: 4
+    ## Rows: 23097 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -424,9 +424,6 @@ extract_df_all |>
   #Color by region, transparency by area
   geom_raster(aes(x = lon, y = lat, fill = region, alpha = area_m))
 ```
-
-    ## Warning: Raster pixels are placed at uneven horizontal intervals and will be shifted
-    ## ℹ Consider using `geom_tile()` instead.
 
 ![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 

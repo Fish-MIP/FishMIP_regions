@@ -210,7 +210,7 @@ You can also apply the mask to extract all data at once.
   
 ```{r}
 #Apply mask to ESM data
-extract_df_all <-read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
+extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
   left_join(sample_df, by = c("lon", "lat"))
 
 #Plotting result
