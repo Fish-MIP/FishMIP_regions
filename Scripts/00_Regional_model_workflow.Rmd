@@ -3,12 +3,11 @@ title: "Regional_workflow"
 author: "Denisse Fierro Arcos"
 date: "2024-02-05"
 output:
-  word_document: default
   pdf_document: default
 ---
 
 # Protocol 3A: Regional model workflow
-In this notebook, we will create a diagram for the workflow that regional modellers should follow under FishMIP Protocol 3A.  
+In this notebook, we will create a diagram for the workflow that regional modelers should follow under FishMIP Protocol 3A.  
   
 ## Loading libraries
   
