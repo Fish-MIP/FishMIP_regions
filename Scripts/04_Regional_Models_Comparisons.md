@@ -59,11 +59,13 @@ library(RColorBrewer)
 
 ``` r
 #Creating data frame with regional models to be included
-cmip_model <- tibble(region = c("Baltic Sea", "Humboldt", "Mediterranean", "North Sea", "SE Australia",
-                                "Benguela", "East Bering", "Hawaii",
-                                "Cook Strait", "East Bass"),
+cmip_model <- tibble(region = c("Baltic Sea EwE", "Humboldt", "Mediterranean", 
+                                "North Sea EwE", "SE Australia Atlantis", "Benguela", 
+                                "East Bering", "Hawaiian Longline", "Cook Strait", 
+                                "East Bass"),
                      #CMIP version used
-                     esm = c(rep("CMIP5", 5), rep("CMIP6", 3), rep("CMIP5 & CMIP6", 2))) |> 
+                     esm = c(rep("CMIP5", 5), rep("CMIP6", 3), rep("CMIP5 & CMIP6", 2)),
+                     fill = c(rep("#F21A00", 5), rep("#3B9AB2", 3), rep("#E9C621", 2))) |> 
   mutate(esm = factor(esm, ordered = T, levels = c("CMIP5", "CMIP6", "CMIP5 & CMIP6")))
 
 #Selecting regional models based on data frame above
@@ -79,28 +81,24 @@ cmip_comp <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_models
 cmip_comp
 ```
 
-    ## Simple feature collection with 14 features and 4 fields
+    ## Simple feature collection with 10 features and 5 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
-    ## Bounding box:  xmin: -180 ymin: -47.19364 xmax: 179.5 ymax: 64.5
+    ## Bounding box:  xmin: -180 ymin: -46.85 xmax: 179.5 ymax: 64.5
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 14 × 5
-    ##    region                models          nmbr_md                  geometry esm  
-    ##    <chr>                 <chr>             <int>        <MULTIPOLYGON [°]> <ord>
-    ##  1 Baltic Sea EwE        EwE                   1 (((23.5 64.5, 23.5 64.05… CMIP5
-    ##  2 Baltic Sea Mizer      Mizer                 1 (((20.5847 54.93254, 20.… CMIP5
-    ##  3 Benguela              Atlantis, EwE,…       3 (((19.90119 -36.77948, 1… CMIP6
-    ##  4 Cook Strait           EwE                   1 (((175.209 -40.5, 175.20… CMIP…
-    ##  5 East Bass Strait      EwE                   1 (((150.5 -36, 150.5 -39,… CMIP…
-    ##  6 East Bering Sea       Mizer                 1 (((-165.61 54.51, -165.6… CMIP6
-    ##  7 Hawaiian Longline     Mizer                 1 (((-150 40, -150 36, -12… CMIP6
-    ##  8 Main Hawaiian Islands ECOTRAN               1 (((-152 16.00012, -164 1… CMIP6
-    ##  9 Mediterranean Sea     EwE                   1 (((29.05594 41.0923, 29.… CMIP5
-    ## 10 North Humboldt        OSMOSE                1 (((-77.3643 6, -77.3643 … CMIP5
-    ## 11 North Sea EwE Mizer   EwE, Mizer            2 (((4.99375 62, 4.995313 … CMIP5
-    ## 12 North Sea OSMOSE      OSMOSE                1 (((1.5 61.75, 1.5 61.5, … CMIP5
-    ## 13 SE Australia Atlantis Atlantis              1 (((117.8 -35.4699, 117.8… CMIP5
-    ## 14 SE Australia Mizer    Mizer                 1 (((130.8023 -31.65674, 1… CMIP5
+    ## # A tibble: 10 × 6
+    ##    region                models    nmbr_md                  geometry esm   fill 
+    ##    <chr>                 <chr>       <int>        <MULTIPOLYGON [°]> <ord> <chr>
+    ##  1 Baltic Sea EwE        EwE             1 (((23.5 64.5, 23.5 64.05… CMIP5 #F21…
+    ##  2 Benguela              Atlantis…       3 (((19.90119 -36.77948, 1… CMIP6 #3B9…
+    ##  3 Cook Strait           EwE             1 (((175.209 -40.5, 175.20… CMIP… #E9C…
+    ##  4 East Bass Strait      EwE             1 (((150.5 -36, 150.5 -39,… CMIP… #E9C…
+    ##  5 East Bering Sea       Mizer           1 (((-165.61 54.51, -165.6… CMIP6 #3B9…
+    ##  6 Hawaiian Longline     Mizer           1 (((-150 40, -150 36, -12… CMIP6 #3B9…
+    ##  7 Mediterranean Sea     EwE             1 (((29.05594 41.0923, 29.… CMIP5 #F21…
+    ##  8 North Humboldt        OSMOSE          1 (((-77.3643 6, -77.3643 … CMIP5 #F21…
+    ##  9 North Sea EwE Mizer   <NA>           NA (((4.99375 62, 4.995313 … CMIP5 #F21…
+    ## 10 SE Australia Atlantis Atlantis        1 (((117.8 -35.4699, 117.8… CMIP5 #F21…
 
 ### Data preparation
 
@@ -129,14 +127,16 @@ cmip_comp_rob <- cmip_comp |>
 
 ``` r
 #Plotting 
-reg <- cmip_comp_rob |> 
-  #Plotting
-  ggplot()+
+reg <- ggplot()+
   #Color regions by CMIP version used
-  geom_sf(aes(fill = esm), alpha = 0.5, linewidth = 0.65)+
+  geom_sf(data = cmip_comp_rob, aes(fill = esm, color = esm), alpha = 0.5, 
+          linewidth = 0.65)+
+  geom_sf(data = cmip_comp_rob[cmip_comp_rob$region == "East Bass Strait",],
+          aes(fill = esm, color = esm), alpha = 0.5, linewidth = 2, 
+          show.legend = F)+
   geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
-  #Selecting colourblind friendly colours
-  scale_fill_manual(values = c("#ddaa33", "#bb5566", "#004488"))+
+  #Colour palette as given by Tyler
+  scale_fill_manual(values = cmip_comp_rob$fill)+
   theme_bw()+
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),

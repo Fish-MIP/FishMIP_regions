@@ -31,11 +31,13 @@ library(RColorBrewer)
 
 ```{r}
 #Creating data frame with regional models to be included
-cmip_model <- tibble(region = c("Baltic Sea", "Humboldt", "Mediterranean", "North Sea", "SE Australia",
-                                "Benguela", "East Bering", "Hawaii",
-                                "Cook Strait", "East Bass"),
+cmip_model <- tibble(region = c("Baltic Sea EwE", "Humboldt", "Mediterranean", 
+                                "North Sea EwE", "SE Australia Atlantis", "Benguela", 
+                                "East Bering", "Hawaiian Longline", "Cook Strait", 
+                                "East Bass"),
                      #CMIP version used
-                     esm = c(rep("CMIP5", 5), rep("CMIP6", 3), rep("CMIP5 & CMIP6", 2))) |> 
+                     esm = c(rep("CMIP5", 5), rep("CMIP6", 3), rep("CMIP5 & CMIP6", 2)),
+                     fill = c(rep("#F21A00", 5), rep("#3B9AB2", 3), rep("#E9C621", 2))) |> 
   mutate(esm = factor(esm, ordered = T, levels = c("CMIP5", "CMIP6", "CMIP5 & CMIP6")))
 
 #Selecting regional models based on data frame above
@@ -75,14 +77,16 @@ cmip_comp_rob <- cmip_comp |>
   
 ```{r}
 #Plotting 
-reg <- cmip_comp_rob |> 
-  #Plotting
-  ggplot()+
+reg <- ggplot()+
   #Color regions by CMIP version used
-  geom_sf(aes(fill = esm), alpha = 0.5, linewidth = 0.65)+
+  geom_sf(data = cmip_comp_rob, aes(fill = esm, color = esm), alpha = 0.5, 
+          linewidth = 0.65)+
+  geom_sf(data = cmip_comp_rob[cmip_comp_rob$region == "East Bass Strait",],
+          aes(fill = esm, color = esm), alpha = 0.5, linewidth = 2, 
+          show.legend = F)+
   geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
-  #Selecting colourblind friendly colours
-  scale_fill_manual(values = c("#ddaa33", "#bb5566", "#004488"))+
+  #Colour palette as given by Tyler
+  scale_fill_manual(values = cmip_comp_rob$fill)+
   theme_bw()+
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),
@@ -99,7 +103,7 @@ reg
   
 ### Saving map to disk
   
-```{r}
+```{r, eval = FALSE}
 #Saving final map
 ggsave("../Outputs/FishMIP_regional_models_cmip_comparison.pdf", reg, device = "pdf", 
        width = 18.75, height = 15, units = "cm")
