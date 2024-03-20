@@ -3,7 +3,9 @@ title: "Regional_workflow"
 author: "Denisse Fierro Arcos"
 date: "2024-02-05"
 output:
-  pdf_document: default
+   github_document:
+    toc: true
+    html_preview: false
 ---
 
 # Protocol 3A: Regional model workflow
@@ -11,15 +13,16 @@ In this notebook, we will create a diagram for the workflow that regional modele
   
 ## Loading libraries
   
-```{r, warning = F, echo = F}
+```{r, warning = F}
 library(DiagrammeR)
 library(DiagrammeRsvg)
+library(rsvg)
 ```
 
 ## Designing workflow
   
 ```{r, echo = F}
-grViz("digraph git_basics {
+p <- grViz("digraph git_basics {
 graph [
       margin = '0,0'
       newrank = true
@@ -46,67 +49,67 @@ edge [
       penwidth = 2
       shape = 'record']
 
-Step_0[label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 0:</b><br/></td> </tr>
+Step_1[label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 1:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Identify which climate variables<br/>
 			to use and how these are<br/>
 			implemented<br/>
 			</td> </tr>
 		</table>>]
-Step_1 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 1:</b><br/></td> </tr>
+Step_2 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 2:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Provide shapefile of your model<br/>
 			domain and fill out model<br/>
 			template<br/>
 			</td> </tr>
 		</table>>]
 Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979']
-Step_2 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 2:</b><br/></td> </tr>
+Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 3:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Visualise and extract input<br/>
 			variables to see if bias correction<br/>
 			 is needed<br/>
 			</td> </tr>
 		</table>>]
-Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 3:</b><br/></td> </tr>
+Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Determine if further downscaling<br/>
 			 is needed<br/>
 			<br/>
 			</td> </tr>
 		</table>>]
-Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
+Step_5 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 5:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Match and extract fishing effort<br/>
 			groupings to force your model<br/>
 			<br/>
 			</td> </tr>
 		</table>>
-		tooltip = 'Step 4:']
-Step_5 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 5:</b><br/></td> </tr>
+		tooltip = 'Step 5:']
+Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 6:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Calibrate model with<br/>
 			 observational data for reference<br/>
 			 period<br/>
 			</td> </tr>
 		</table>>
-		tooltip = 'Step 5:']
-Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 6:</b><br/></td> </tr>
+		tooltip = 'Step 6:']
+Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Set up model with forcings for<br/>
 			each comparative experimental<br/>
 			run<br/>
 			</td> </tr>
 		</table>>]
-Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
+Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 8:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Output standard variables to<br/>
 			compare with data and across<br/>
 			models over time/space<br/>
 			</td> </tr>
 		</table>>]
-Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
-			<tr> <td bgcolor = '#92bde4'> <b>Step 8:</b><br/></td> </tr>
+Step_9 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
+			<tr> <td bgcolor = '#92bde4'> <b>Step 9:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Quality control checks and upload<br/>
 			to FishMIP server<br/>
 			<br/>
@@ -115,28 +118,47 @@ Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 
 subgraph sub_1 {
   
-  Step_0 -> Step_1 
-  Step_1 -> Step_n [style = dotted]
-  Step_n -> Step_2 [label = 'No' fontcolor = '#329932' style = dotted color = '#329932' 
+  Step_1 -> Step_2 
+  Step_2 -> Step_n [style = dotted]
+  Step_n -> Step_3 [label = 'No' fontcolor = '#329932' style = dotted color = '#329932' 
                     fontname = 'bold Helvetica,Arial,sans-serif']
-  Step_n -> Step_3 [label = 'Yes' fontcolor = '#d8ae2d' style = dotted color = '#d8ae2d'
+  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8ae2d' style = dotted color = '#d8ae2d'
                     fontname = 'bold Helvetica,Arial,sans-serif']
-  {Step_2 Step_3} -> Step_4
-  Step_4 -> Step_5 [weight = 10 splines = line];
+  {Step_3 Step_4} -> Step_5
+  Step_5 -> Step_6 [weight = 10 splines = line];
   }
 
 subgraph sub_2 {
-  Step_5 -> Step_6 -> Step_7 -> Step_8
+  Step_6 -> Step_7 -> Step_8 -> Step_9
   }
 
 subgraph sub_3 {
   graph [rank = same]
   edge [style = invis,
         weight = 1]
-  Step_0 -> Step_5[weight = 1]
+  Step_1 -> Step_6[weight = 1]
 }
 }",
 width = "100%", height = "100%")
 
+p
 ```
+  
+We can now save it as an `svg` image, but first we need to transform from the original HTML format.  
+  
+```{r, eval = FALSE}
+#Changing from html to svg
+svg_workflow <- export_svg(p)
+
+#Saving as svg
+writeLines(svg_workflow, "../Outputs/FishMIP_regional_model_workflow.svg")
+```
+  
+If we prefer, we can change the format from `svg` to `png`.  
+  
+```{r, eval = FALSE}
+rsvg_png("../Outputs/FishMIP_regional_model_workflow.svg", 
+         "../Outputs/FishMIP_regional_model_workflow.png")
+```
+  
   
