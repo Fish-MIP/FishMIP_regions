@@ -21,7 +21,7 @@ library(rsvg)
 
 ## Designing workflow
   
-```{r, echo = F}
+```{r}
 p <- grViz("digraph git_basics {
 graph [
       margin = '0,0'
