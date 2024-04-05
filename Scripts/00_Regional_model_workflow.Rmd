@@ -38,13 +38,13 @@ node [
       style = filled
       fillcolor = 'white'
       fontname = 'Helvetica,Arial,sans-serif'
-      fontsize = 20
+      fontsize = 25
       width = 4
       ]
       
 edge [
       fontname = 'Helvetica,Arial,sans-serif'
-      fontsize = 30
+      fontsize = 35
       labelfontcolor = '#00000080'
       penwidth = 2
       shape = 'record']
