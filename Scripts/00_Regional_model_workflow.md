@@ -43,7 +43,7 @@ node [
       style = filled
       fillcolor = 'white'
       fontname = 'Helvetica,Arial,sans-serif'
-      fontsize = 20
+      fontsize = 30
       width = 4
       ]
       
@@ -124,11 +124,11 @@ Step_9 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 subgraph sub_1 {
   
   Step_1 -> Step_2 
-  Step_2 -> Step_n [style = dotted]
-  Step_n -> Step_3 [label = 'No' fontcolor = '#329932' style = dotted color = '#329932' 
-                    fontname = 'bold Helvetica,Arial,sans-serif']
-  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8ae2d' style = dotted color = '#d8ae2d'
-                    fontname = 'bold Helvetica,Arial,sans-serif']
+  Step_2 -> Step_n [style = dotted penwidth = 5]
+  Step_n -> Step_3 [label = 'No' fontcolor = '#194c19' style = dotted color = '#194c19' 
+                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
+  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8582d' style = dotted color = '#d8582d'
+                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
   {Step_3 Step_4} -> Step_5
   Step_5 -> Step_6 [weight = 10 splines = line];
   }
