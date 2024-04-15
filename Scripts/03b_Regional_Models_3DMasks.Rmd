@@ -194,7 +194,7 @@ sample_df <- rast("../ESM_Sample_Data/area_1deg.nc") |>
 #Load raster mask
 mask_df <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
   #We will choose mask 9 - East Antarctica (see keys above)
-  filter(region == "East Antarctica")
+  filter(region == "East Antarctica EwE")
 
 #Apply mask to ESM data
 extract_df <- mask_df |> 

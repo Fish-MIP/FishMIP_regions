@@ -265,20 +265,20 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 30 × 2
-    ##       id region               
-    ##    <int> <chr>                
-    ##  1     1 Baltic Sea EwE       
-    ##  2     2 Baltic Sea Mizer     
-    ##  3     3 Benguela             
-    ##  4     4 Brasil NE            
-    ##  5     5 Central North Pacific
-    ##  6     6 Central South Pacific
-    ##  7     7 Chatham Rise         
-    ##  8     8 Cook Strait          
-    ##  9     9 East Antarctica      
-    ## 10    10 East Bass Strait     
-    ## # ℹ 20 more rows
+    ## # A tibble: 33 × 2
+    ##       id region                  
+    ##    <int> <chr>                   
+    ##  1     1 Baltic Sea EwE          
+    ##  2     2 Baltic Sea Mizer        
+    ##  3     3 Brazil NE               
+    ##  4     4 Central North Pacific   
+    ##  5     5 Central South Pacific   
+    ##  6     6 Chatham Rise            
+    ##  7     7 Cook Strait             
+    ##  8     8 East Antarctica Atlantis
+    ##  9     9 East Antarctica EwE     
+    ## 10    10 East Bass Strait        
+    ## # ℹ 23 more rows
 
 ## How to use raster mask
 
@@ -375,10 +375,10 @@ sample_df <- rast("../ESM_Sample_Data/area_1deg.nc") |>
 #Load raster mask
 mask_df <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
   #We will choose mask 9 - East Antarctica (see keys above)
-  filter(region == "East Antarctica")
+  filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 23097 Columns: 4
+    ## Rows: 23816 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -408,7 +408,7 @@ extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.c
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 23097 Columns: 4
+    ## Rows: 23816 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
