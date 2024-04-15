@@ -107,7 +107,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#66ccee", 
-         "#117733", "#997700", "#aa4499")
+         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"))
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -244,14 +244,14 @@ so <- reg+
   #Add world base map
   geom_sf(data = world, fill = "#f9f9f5")+
   #Focus on Australia and New Zealand
-  lims(x = c(3200000, 8800000), y = c(-7225154, -4712577))+
+  lims(x = c(1900000, 8800000), y = c(-7525154, -4712577))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 3100000, xmax = 8900000, ymax = -4612577, ymin = -7325154),
+so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577, ymin = -7625154),
                   crs = rob_proj) |>
   st_as_sfc()
 
@@ -293,11 +293,12 @@ The final map can be saved to your local machine. We will save it as vector imag
   
 ```{r}
 #Saving final map
-ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", 
-       width = 22.5, height = 10, units = "cm")
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, 
+       device = "pdf", width = 25, height = 15, units = "cm")
 
 #Saving main map with just regions and no insets
-ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
+ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
+       width = 9)
 ```
 
 

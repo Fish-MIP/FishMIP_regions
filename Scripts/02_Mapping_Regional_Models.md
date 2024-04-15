@@ -137,29 +137,29 @@ fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_mode
 fishmip_reg
 ```
 
-    ## Simple feature collection with 29 features and 3 fields
+    ## Simple feature collection with 32 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
-    ## Bounding box:  xmin: -180 ymin: -71.9699 xmax: 180 ymax: 83.66553
+    ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 29 × 4
-    ##    region                models                nmbr_md                  geometry
-    ##  * <chr>                 <chr>                   <int>        <MULTIPOLYGON [°]>
-    ##  1 Baltic Sea EwE        EwE                         1 (((23.5 64.5, 23.5 64.05…
-    ##  2 Baltic Sea Mizer      Mizer                       1 (((20.5847 54.93254, 20.…
-    ##  3 Benguela              Atlantis, EwE, OSMOSE       3 (((19.90119 -36.77948, 1…
-    ##  4 Brasil NE             EcoSpace                    1 (((-36.94482 -4.549031, …
-    ##  5 Central North Pacific ECOTRAN                     1 (((-140 10, -180 10, -18…
-    ##  6 Central South Pacific Mizer                       1 (((-168.2779 -22.09492, …
-    ##  7 Chatham Rise          Atlantis, EwE, Mizer        3 (((172 -45.33333, 172 -4…
-    ##  8 Cook Strait           EwE                         1 (((175.209 -40.5, 175.20…
-    ##  9 East Antarctica       Atlantis                    1 (((81.87166 -53.63183, 1…
-    ## 10 East Bass Strait      EwE                         1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 19 more rows
+    ## # A tibble: 32 × 4
+    ##    region                   models             nmbr_md                  geometry
+    ##  * <chr>                    <chr>                <int>        <MULTIPOLYGON [°]>
+    ##  1 Baltic Sea EwE           EwE                      1 (((23.5 64.5, 23.5 64.05…
+    ##  2 Baltic Sea Mizer         Mizer                    1 (((20.5847 54.93254, 20.…
+    ##  3 Brazil NE                EcoSpace                 1 (((-36.94482 -4.549031, …
+    ##  4 Central North Pacific    ECOTRAN                  1 (((-140 10, -180 10, -18…
+    ##  5 Central South Pacific    Mizer                    1 (((-168.2779 -22.09492, …
+    ##  6 Chatham Rise             Atlantis, EwE, Mi…       3 (((172 -45.33333, 172 -4…
+    ##  7 Cook Strait              EwE                      1 (((175.209 -40.5, 175.20…
+    ##  8 East Antarctica Atlantis Atlantis                 1 (((81.87166 -53.63183, 1…
+    ##  9 East Antarctica EwE      EwE                      1 (((80 -64, 80 -68.00585,…
+    ## 10 East Bass Strait         EwE                      1 (((150.5 -36, 150.5 -39,…
+    ## # ℹ 22 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 29 polygons left.
+Since we removed the Southern Ocean region, we have 32 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -187,7 +187,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#66ccee", 
-         "#117733", "#997700", "#aa4499")
+         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"))
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -342,14 +342,14 @@ so <- reg+
   #Add world base map
   geom_sf(data = world, fill = "#f9f9f5")+
   #Focus on Australia and New Zealand
-  lims(x = c(3200000, 8800000), y = c(-7225154, -4712577))+
+  lims(x = c(1900000, 8800000), y = c(-7525154, -4712577))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 3100000, xmax = 8900000, ymax = -4612577, ymin = -7325154),
+so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577, ymin = -7625154),
                   crs = rob_proj) |>
   st_as_sfc()
 
@@ -403,11 +403,12 @@ server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 
 ``` r
 #Saving final map
-ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, device = "pdf", 
-       width = 22.5, height = 10, units = "cm")
+ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, 
+       device = "pdf", width = 25, height = 15, units = "cm")
 
 #Saving main map with just regions and no insets
-ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf")
+ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
+       width = 9)
 ```
 
-    ## Saving 7 x 5 in image
+    ## Saving 9 x 5 in image
