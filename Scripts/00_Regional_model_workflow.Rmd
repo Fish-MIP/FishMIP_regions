@@ -63,7 +63,6 @@ Step_2 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 			template<br/>
 			</td> </tr>
 		</table>>]
-Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979']
 Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 3:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Visualise and extract input<br/>
@@ -71,6 +70,7 @@ Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 			 is needed<br/>
 			</td> </tr>
 		</table>>]
+Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979']
 Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Determine if further downscaling<br/>
@@ -97,7 +97,7 @@ Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Set up model with forcings for<br/>
-			each comparative experimental<br/>
+			each experimental<br/>
 			run<br/>
 			</td> </tr>
 		</table>>]
@@ -119,10 +119,12 @@ Step_9 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 subgraph sub_1 {
   
   Step_1 -> Step_2 
-  Step_2 -> Step_n [style = dotted penwidth = 5]
-  Step_n -> Step_3 [label = 'No' fontcolor = '#194c19' style = dotted color = '#194c19' 
+  Step_2 -> Step_3
+  Step_3 _> Step_4 
+  Step_4 _> Step_n [style = dotted penwidth = 5]
+  Step_n -> Step_5 [label = 'No' fontcolor = '#000000' style = dotted color = '#194c19' 
                     fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
-  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8582d' style = dotted color = '#d8582d'
+  Step_n -> Step_5 [label = 'Yes' fontcolor = '#000000' style = dotted color = '#d8582d'
                     fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
   {Step_3 Step_4} -> Step_5
   Step_5 -> Step_6 [weight = 10 splines = line];
