@@ -52,7 +52,11 @@ reg_info <- str_split(reg, "_", simplify = T) |>
   #Counting the number of ecosystem models available per region
   separate_longer_delim(model_all, delim = "-") |> 
   group_by(region, models) |> 
-  count(name = "number_models")
+  count(name = "number_models") |> 
+  #Change name of Hawaiian region
+  mutate(region = case_when(str_detect(region, "Hawaii based") ~ 
+                              "Hawai'i based Longline", 
+                            T ~ region))
 ```
   
 ## Getting list of LME names from directory paths
