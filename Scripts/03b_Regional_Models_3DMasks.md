@@ -81,10 +81,8 @@ sample_rasters <- list.files("../ESM_Sample_Data/", pattern = ".nc$", full.names
 sample_rasters
 ```
 
-    ## [1] "../ESM_Sample_Data//area_025deg.nc"   
-    ## [2] "../ESM_Sample_Data//area_05deg.nc"    
-    ## [3] "../ESM_Sample_Data//area_1deg_DBPM.nc"
-    ## [4] "../ESM_Sample_Data//area_1deg.nc"
+    ## [1] "../ESM_Sample_Data//area_025deg.nc" "../ESM_Sample_Data//area_05deg.nc" 
+    ## [3] "../ESM_Sample_Data//area_1deg.nc"
 
 We will define a function that will go through each sample file and
 create a mask.
@@ -265,7 +263,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 33 × 2
+    ## # A tibble: 32 × 2
     ##       id region                  
     ##    <int> <chr>                   
     ##  1     1 Baltic Sea EwE          
@@ -278,7 +276,7 @@ reg_keys
     ##  8     8 East Antarctica Atlantis
     ##  9     9 East Antarctica EwE     
     ## 10    10 East Bass Strait        
-    ## # ℹ 23 more rows
+    ## # ℹ 22 more rows
 
 ## How to use raster mask
 
@@ -378,7 +376,7 @@ mask_df <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |>
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 23816 Columns: 4
+    ## Rows: 23596 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -408,7 +406,7 @@ extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.c
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 23816 Columns: 4
+    ## Rows: 23596 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
