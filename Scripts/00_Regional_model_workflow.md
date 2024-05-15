@@ -31,27 +31,26 @@ p <- grViz("digraph git_basics {
 graph [
       margin = '0,0'
       newrank = true
-      splines = false
-      splines = compound
-      nodesep = 0.3
-      ranksep = 0.2
+      nodesep = 0.4
+      ranksep = 0.8
       overlap = true
-      rankdir = TB]
+      rankdir = TB
+      ]
       
 node [
       shape = rectangle
       style = filled
       fillcolor = 'white'
       fontname = 'Helvetica,Arial,sans-serif'
-      fontsize = 30
-      width = 4
+      fontsize = 35
+      width = 5
       ]
       
 edge [
       fontname = 'Helvetica,Arial,sans-serif'
-      fontsize = 30
+      fontsize = 35
       labelfontcolor = '#00000080'
-      penwidth = 2
+      penwidth = 3
       shape = 'record']
 
 Step_1[label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
@@ -68,7 +67,7 @@ Step_2 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
             template<br/>
             </td> </tr>
         </table>>]
-Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979']
+Step_n [label = '\nIs model spatial?\n\n' fillcolor = '#f6b979' fontsize = 38]
 Step_3 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
             <tr> <td bgcolor = '#92bde4'> <b>Step 3:</b><br/></td> </tr>
             <tr> <td bgcolor = '#e3eef8'>Visualise and extract input<br/>
@@ -80,7 +79,6 @@ Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
             <tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
             <tr> <td bgcolor = '#e3eef8'>Determine if further downscaling<br/>
              is needed<br/>
-            <br/>
             </td> </tr>
         </table>>]
 Step_5 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
@@ -94,18 +92,17 @@ Step_5 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
             <tr> <td bgcolor = '#92bde4'> <b>Step 6:</b><br/></td> </tr>
             <tr> <td bgcolor = '#e3eef8'>Calibrate model with<br/>
-             observational data for reference<br/>
-             period<br/>
+             observational global catch data<br/>
+             for reference period<br/>
             </td> </tr>
-        </table>>
-        tooltip = 'Step 6:']
+        </table>>]
 Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
             <tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
             <tr> <td bgcolor = '#e3eef8'>Set up model with forcings for<br/>
-            each comparative experimental<br/>
-            run<br/>
+            each experimental run<br/>
             </td> </tr>
-        </table>>]
+        </table>>
+        tooltip = 'Step 7:']
 Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
             <tr> <td bgcolor = '#92bde4'> <b>Step 8:</b><br/></td> </tr>
             <tr> <td bgcolor = '#e3eef8'>Output standard variables to<br/>
@@ -115,34 +112,39 @@ Step_8 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
         </table>>]
 Step_9 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
             <tr> <td bgcolor = '#92bde4'> <b>Step 9:</b><br/></td> </tr>
-            <tr> <td bgcolor = '#e3eef8'>Quality control checks and upload<br/>
-            to FishMIP server<br/>
+            <tr> <td bgcolor = '#e3eef8'>Quality control checks and up-<br/>
+            load to FishMIP server<br/>
             <br/>
             </td> </tr>
         </table>>]
 
 subgraph sub_1 {
-  
-  Step_1 -> Step_2 
-  Step_2 -> Step_n [style = dotted penwidth = 5]
-  Step_n -> Step_3 [label = 'No' fontcolor = '#194c19' style = dotted color = '#194c19' 
-                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
-  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8582d' style = dotted color = '#d8582d'
-                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 5 fontsize = 40]
-  {Step_3 Step_4} -> Step_5
-  Step_5 -> Step_6 [weight = 10 splines = line];
-  }
+  Step_1 -> Step_2 -> Step_3
+  Step_3 -> Step_n [weight = 0.5 curve = basis]
+}
 
 subgraph sub_2 {
-  Step_6 -> Step_7 -> Step_8 -> Step_9
-  }
+  Step_n -> Step_4 [label = 'Yes' style = dotted penwidth = 6 fontsize = 45
+                    fontname = 'bold Helvetica,Arial,sans-serif']
+  Step_n -> Step_5 [label = 'No' style = dotted penwidth = 6 fontsize = 45
+                    fontname = 'bold Helvetica,Arial,sans-serif']
+  Step_4 -> Step_5 
+  Step_5 -> Step_6 
+  Step_6 -> Step_7 [weight = 0.5 curve = basis]
+}
 
 subgraph sub_3 {
-  graph [rank = same]
-  edge [style = invis,
-        weight = 1]
-  Step_1 -> Step_6[weight = 1]
+  Step_7 -> Step_8 -> Step_9
 }
+
+subgraph sub_4 {
+  graph [rank = same]
+  edge [style = invis, weight = 0.1]
+  Step_1 -> Step_n
+  Step_n -> Step_7
+}
+
+
 }",
 width = "100%", height = "100%")
 
