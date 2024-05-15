@@ -74,7 +74,6 @@ Step_4 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 			<tr> <td bgcolor = '#92bde4'> <b>Step 4:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Determine if further downscaling<br/>
 			 is needed<br/>
-			<br/>
 			</td> </tr>
 		</table>>]
 Step_5 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
@@ -95,8 +94,7 @@ Step_6 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='2
 Step_7 [label = <<table border='0' cellborder='1' cellspacing='0' cellpadding='28'>
 			<tr> <td bgcolor = '#92bde4'> <b>Step 7:</b><br/></td> </tr>
 			<tr> <td bgcolor = '#e3eef8'>Set up model with forcings for<br/>
-			each comparative <br/>
-			experimental run<br/>
+			each experimental run<br/>
 			</td> </tr>
 		</table>>
 		tooltip = 'Step 7:']
@@ -121,11 +119,12 @@ subgraph sub_1 {
 }
 
 subgraph sub_2 {
-  Step_n -> Step_4 [label = 'Yes' fontcolor = '#d8582d' style = dotted color = '#d8582d'
-                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 6 fontsize = 45]
-  Step_n -> Step_5 [label = 'No' fontcolor = '#194c19' style = dotted color = '#194c19' 
-                    fontname = 'bold Helvetica,Arial,sans-serif' penwidth = 6 fontsize = 45]
-  {Step_4 Step_5} -> Step_6 [weight = 1]
+  Step_n -> Step_4 [label = 'Yes' style = dotted penwidth = 6 fontsize = 45
+                    fontname = 'bold Helvetica,Arial,sans-serif']
+  Step_n -> Step_5 [label = 'No' style = dotted penwidth = 6 fontsize = 45
+                    fontname = 'bold Helvetica,Arial,sans-serif']
+  Step_4 -> Step_5 
+  Step_5 -> Step_6 
   Step_6 -> Step_7 [weight = 0.5 curve = basis]
 }
 
@@ -146,8 +145,6 @@ width = "100%", height = "100%")
 
 p
 ```
-
-  
   
 We can now save it as an `svg` image, but first we need to transform from the original HTML format.  
   
