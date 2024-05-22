@@ -93,7 +93,8 @@ which are available as a `zip` folder.
 #Defining domain name for THREDDS server
 domain <- "http://portal.sf.utas.edu.au"
 #Defining location of regional shapefile in THREDDS server
-fishmip_reg_cat <- paste0(domain, "/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.xml")
+fishmip_reg_cat <- paste0(domain, "/thredds/catalog/gem/fishmip/", 
+                          "FishMIP_regions/catalog.xml")
 
 #Getting catalog items available in server
 fishmip_reg <- CatalogNode$new(fishmip_reg_cat, prefix = "thredds")
@@ -130,7 +131,9 @@ Now that we have downloaded the merged shapefiles, we can load it to `R`
 and create a map. We will exclude the Southern Ocean region.
 
 ``` r
-fishmip_reg <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+fishmip_reg <- file.path("/rd/gem/private/shared_resources/",
+                         "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+  read_sf() |> 
   filter(region != "Southern Ocean")
 
 #Checking results
@@ -175,7 +178,8 @@ information to the reprojected regional shapefile for plotting.
 
 ``` r
 #Define Robinson projection to be applied to shapefile and basemap
-rob_proj <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs"
+rob_proj <- paste0("+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m ", 
+                   "+no_defs +type=crs")
 
 #Load world base map
 world <- ne_countries(scale = "medium", returnclass = "sf") |> 
@@ -410,5 +414,3 @@ ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map,
 ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
        width = 9)
 ```
-
-    ## Saving 9 x 5 in image

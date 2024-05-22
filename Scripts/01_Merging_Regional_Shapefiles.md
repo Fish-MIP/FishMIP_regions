@@ -59,8 +59,11 @@ information to create two new columns in the final FishMIP regional
 models shapefile.
 
 ``` r
+#Shapefile folder
+shp_reg <- "/rd/gem/private/shared_resources/Shapefiles_Regions/"
+
 #Getting name of folders containing regional models
-reg <- list.dirs("../Shapefiles_Regions/", recursive = F, full.names = F)
+reg <- list.dirs(shp_reg, recursive = F, full.names = F)
 
 #Creating a table with ecosystem models available per region
 reg_info <- str_split(reg, "_", simplify = T) |>
@@ -84,8 +87,10 @@ reg_info <- str_split(reg, "_", simplify = T) |>
 ## Getting list of LME names from directory paths
 
 ``` r
-#Getting a list of shapefiles in the folder containing the regional model boundaries
-region_paths <- list.files("../Shapefiles_Regions", pattern = ".shp$", recursive = T, full.names = T)
+#Getting a list of shapefiles in the folder containing the regional model 
+#boundaries
+region_paths <- list.files(shp_reg, pattern = ".shp$", recursive = T, 
+                           full.names = T)
 #Remove any shapefiles included in "Support Info" folders
 region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
 ```
@@ -148,7 +153,7 @@ number of regional FishMIP models. We can now save this merged file.
 
 ``` r
 #Location of folder for outputs
-out_folder <- "../Outputs/FishMIP_regional_models"
+out_folder <- "/rd/gem/private/shared_resources/FishMIP_regional_models"
 #If folder does not exist, create one
 if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}

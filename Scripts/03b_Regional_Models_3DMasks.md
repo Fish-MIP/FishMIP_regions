@@ -52,7 +52,9 @@ and add a unique ID identifying each region.
 
 ``` r
 #Loading shapefile
-regions <- read_sf("../Outputs/FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+regions <- file.path("/rd/gem/private/shared_resources/",
+                     "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+  read_sf() |> 
   #Create a unique ID for each region
   rowid_to_column("id")
 
@@ -77,12 +79,22 @@ We have a folder containing samples of the raster used in Fish-MIP
 models and ESMs. We will list all the files contained in that folder.
 
 ``` r
-sample_rasters <- list.files("../ESM_Sample_Data/", pattern = ".nc$", full.names = T)
+#Directory containing sample rasters
+samples_dir <- "/rd/gem/private/shared_resources/grid_cell_area_ESMs"
+
+#Getting a list of sample rasters in the isimip folders
+sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = T,
+                             recursive = T) |> 
+  str_subset("isimip")
+
+#Checking results
 sample_rasters
 ```
 
-    ## [1] "../ESM_Sample_Data//area_025deg.nc" "../ESM_Sample_Data//area_05deg.nc" 
-    ## [3] "../ESM_Sample_Data//area_1deg.nc"
+    ## [1] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3a/gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.nc"        
+    ## [2] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3a/gfdl-mom6-cobalt2_areacello_60arcmin_global_fixed.nc"        
+    ## [3] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3b/gfdl-esm4_areacello_w-fractions_60arcmin_global_fixed.nc"    
+    ## [4] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3b/ipsl-cm6a-lr_areacello_wo-fractions_60arcmin_global_fixed.nc"
 
 We will define a function that will go through each sample file and
 create a mask.
@@ -104,11 +116,11 @@ exists, if not, we will create one.
 
 ``` r
 #Ensure output folder exists
-out_folder <- "../Outputs/FishMIPMasks"
+out_folder <- "/rd/gem/private/shared_resources/FishMIPMasks"
 if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
-#Turning storing each region in shapefile as element of a list
+#Storing each region inside the regions shapefile as an element of a list
 region_list <- split(regions, 1:nrow(regions))
 ```
 
@@ -120,8 +132,8 @@ for(ras in sample_rasters){
   stack_list <- map(region_list, shp_to_raster, ras)
   stack <- rast(stack_list)
   #Create name for mask to be saved from original raster sample
-  file_out <- paste0("FishMIP_regional_mask", 
-                     str_extract(ras, "area(_.*nc)", group = 1))
+  file_out <- str_replace(basename(ras), 
+                          "global", "fishMIP_regional_mask")
   file_out <- file.path(out_folder, file_out)
   #Save multi dimensional raster mask
   writeCDF(stack, file_out, overwrite = T, varname = "region",
@@ -134,7 +146,8 @@ for(ras in sample_rasters){
 We will plot one mask to ensure it has been correctly created.
 
 ``` r
-ras <- rast("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.nc")
+ras <- rast(list.files("/rd/gem/private/shared_resources/FishMIPMasks", 
+                       "w-fractions.*nc", full.names = T))
 ```
 
     ## Warning in new_CppObject_xp(fields$.module, fields$.pointer, ...): GDAL Message
@@ -285,17 +298,10 @@ a binary mask to extract the data we need.
 
 ``` r
 #Load sample ESM data
-sample <- rast("../ESM_Sample_Data/area_1deg.nc")
-#Load raster mask
-mask <- rast("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.nc")
-```
+sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
-    ## Warning in new_CppObject_xp(fields$.module, fields$.pointer, ...): GDAL Message
-    ## 1: dimension #0 (time) is not a Time or Vertical dimension.
-
-``` r
 #We will choose mask 9 - East Antarctica (see keys above)
-east_ant <- mask[[9]]
+east_ant <- ras[[9]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
 ```
@@ -307,23 +313,13 @@ east_ant[!is.na(east_ant)] = 1
     ## : GDAL Message 1: dimension #0 (time) is not a Time or Vertical dimension.
 
 ``` r
-#Plotting data and East Antarctica mask on top
-plot(sample)
-plot(east_ant, add = T)
-```
-
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
-Now that we have the binary mask, we can apply it to the sample data.
-
-``` r
 #Multiply data and mask
 extract_data <- sample*east_ant
 #Check result
 plot(extract_data)
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 # Data frame mask
 
@@ -365,13 +361,14 @@ extract the data we need.
 
 ``` r
 #Load sample ESM data
-sample_df <- rast("../ESM_Sample_Data/area_1deg.nc") |> 
+sample_df <- sample |> 
   #Transforming to data frame
   as.data.frame(xy = T) |> 
   rename("lon" = "x", "lat" = "y")
 
 #Load raster mask
-mask_df <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
+mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
+                               full.names = T)) |> 
   #We will choose mask 9 - East Antarctica (see keys above)
   filter(region == "East Antarctica EwE")
 ```
@@ -393,16 +390,17 @@ extract_df <- mask_df |>
 #Plotting result
 extract_df |> 
   ggplot()+
-  geom_raster(aes(x = lon, y = lat, fill = area_m))
+  geom_raster(aes(x = lon, y = lat, fill = areacello))
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 You can also apply the mask to extract all data at once.
 
 ``` r
 #Apply mask to ESM data
-extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.csv") |> 
+extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
+                               full.names = T)) |> 
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
@@ -420,10 +418,10 @@ extract_df_all <- read_csv("../Outputs/FishMIPMasks/FishMIP_regional_mask_1deg.c
 extract_df_all |> 
   ggplot()+
   #Color by region, transparency by area
-  geom_raster(aes(x = lon, y = lat, fill = region, alpha = area_m))
+  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello))
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 **Note:** When you use a mask, whether in raster or `csv` form, the grid
 for the mask and the data being extracted **MUST** be the same.

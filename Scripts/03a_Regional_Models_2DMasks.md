@@ -45,8 +45,8 @@ library(tidyverse)
 
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
     ## ✔ dplyr     1.1.1     ✔ readr     2.1.4
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.0
-    ## ✔ ggplot2   3.4.1     ✔ tibble    3.2.1
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+    ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
     ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
     ## ✔ purrr     1.0.1
 
@@ -70,7 +70,10 @@ are two polygons for a region, they will be classified as that region.
 
 ``` r
 #Loading shapefile
-southern_ocean <- read_sf("../Shapefiles_Regions/Southern-Ocean_MICE/SupportInfo/SouthernOcean_MICE.shp") |> 
+southern_ocean <- file.path("/rd/gem/private/shared_resources/",
+                            "Shapefiles_Regions/Southern-Ocean_MICE",
+                            "SupportInfo/SouthernOcean_MICE.shp") |> 
+                            read_sf() |> 
   #Uniting region and band columns
   unite("region", region, band)
 
@@ -87,7 +90,8 @@ southern_ocean <- southern_ocean |>
 ne_countries(returnclass = "sf") |> 
   ggplot()+
   geom_sf()+
-  geom_sf(inherit.aes = F, data = southern_ocean, aes(fill = region), alpha = 0.7)+
+  geom_sf(inherit.aes = F, data = southern_ocean, aes(fill = region), 
+          alpha = 0.7)+
   theme_bw()
 ```
 
@@ -103,14 +107,22 @@ We have a folder containing samples of the raster used in Fish-MIP
 models and ESMs. We will list all the files contained in that folder.
 
 ``` r
-sample_rasters <- list.files("../ESM_Sample_Data/", pattern = ".nc$", full.names = T)
+#Directory containing sample rasters
+samples_dir <- "/rd/gem/private/shared_resources/grid_cell_area_ESMs"
+
+#Getting a list of sample rasters in the isimip folders
+sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = T,
+                             recursive = T) |> 
+  str_subset("isimip")
+
+#Checking results
 sample_rasters
 ```
 
-    ## [1] "../ESM_Sample_Data//area_025deg.nc"   
-    ## [2] "../ESM_Sample_Data//area_05deg.nc"    
-    ## [3] "../ESM_Sample_Data//area_1deg_DBPM.nc"
-    ## [4] "../ESM_Sample_Data//area_1deg.nc"
+    ## [1] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3a/gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.nc"        
+    ## [2] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3a/gfdl-mom6-cobalt2_areacello_60arcmin_global_fixed.nc"        
+    ## [3] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3b/gfdl-esm4_areacello_w-fractions_60arcmin_global_fixed.nc"    
+    ## [4] "/rd/gem/private/shared_resources/grid_cell_area_ESMs/isimip3b/ipsl-cm6a-lr_areacello_wo-fractions_60arcmin_global_fixed.nc"
 
 We will define a function that will go through each sample file and
 create a mask.
@@ -124,8 +136,8 @@ shp_to_raster <- function(shp, raster_path, out_folder){
   #Rasterise shapefile
   shp_rast <- rasterize(shp_terra, ras, field = "id", background = NA)
   #Create name for mask to be saved from original raster sample
-  file_out <- paste0("Southern_Ocean_mask", 
-                     str_extract(raster_path, "area(_.*nc)", group = 1))
+  file_out <- str_replace(basename(raster_path), 
+                          "global", "Southern_Ocean_mask")
   file_out <- file.path(out_folder, file_out)
   writeCDF(shp_rast, file_out, overwrite = T, varname = "region", 
            longname = "regions of the SO", missval = NA)
@@ -136,7 +148,7 @@ Applying function to all raster samples.
 
 ``` r
 #Ensure output folder exists
-out_folder <- "../Outputs/SouthernOceanMasks"
+out_folder <- "/rd/gem/private/shared_resources/SouthernOceanMasks"
 if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
@@ -151,7 +163,8 @@ for(ras in sample_rasters){
 We will plot one mask to ensure it has been correctly created.
 
 ``` r
-ras <- rast("../Outputs/SouthernOceanMasks/Southern_Ocean_mask_1deg_DBPM.nc")
+ras <- rast(list.files("/rd/gem/private/shared_resources/SouthernOceanMasks/", 
+                       "w-fractions", full.names = T))
 plot(ras)
 ```
 

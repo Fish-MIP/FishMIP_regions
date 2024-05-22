@@ -31,7 +31,10 @@ Given that some subregions cross the international date line, the shapefile cont
   
 ```{r}
 #Loading shapefile
-southern_ocean <- read_sf("../Shapefiles_Regions/Southern-Ocean_MICE/SupportInfo/SouthernOcean_MICE.shp") |> 
+southern_ocean <- file.path("/rd/gem/private/shared_resources/",
+                            "Shapefiles_Regions/Southern-Ocean_MICE",
+                            "SupportInfo/SouthernOcean_MICE.shp") |> 
+                            read_sf() |> 
   #Uniting region and band columns
   unite("region", region, band)
 
@@ -48,7 +51,8 @@ southern_ocean <- southern_ocean |>
 ne_countries(returnclass = "sf") |> 
   ggplot()+
   geom_sf()+
-  geom_sf(inherit.aes = F, data = southern_ocean, aes(fill = region), alpha = 0.7)+
+  geom_sf(inherit.aes = F, data = southern_ocean, aes(fill = region), 
+          alpha = 0.7)+
   theme_bw()
 ```
   
@@ -58,7 +62,15 @@ The Southern Ocean regions are plotting correctly, now we can move onto creating
 We have a folder containing samples of the raster used in Fish-MIP models and ESMs. We will list all the files contained in that folder.    
   
 ```{r}
-sample_rasters <- list.files("../ESM_Sample_Data/", pattern = ".nc$", full.names = T)
+#Directory containing sample rasters
+samples_dir <- "/rd/gem/private/shared_resources/grid_cell_area_ESMs"
+
+#Getting a list of sample rasters in the isimip folders
+sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = T,
+                             recursive = T) |> 
+  str_subset("isimip")
+
+#Checking results
 sample_rasters
 ```
   
@@ -73,8 +85,8 @@ shp_to_raster <- function(shp, raster_path, out_folder){
   #Rasterise shapefile
   shp_rast <- rasterize(shp_terra, ras, field = "id", background = NA)
   #Create name for mask to be saved from original raster sample
-  file_out <- paste0("Southern_Ocean_mask", 
-                     str_extract(raster_path, "area(_.*nc)", group = 1))
+  file_out <- str_replace(basename(raster_path), 
+                          "global", "Southern_Ocean_mask")
   file_out <- file.path(out_folder, file_out)
   writeCDF(shp_rast, file_out, overwrite = T, varname = "region", 
            longname = "regions of the SO", missval = NA)
@@ -83,9 +95,9 @@ shp_to_raster <- function(shp, raster_path, out_folder){
   
 Applying function to all raster samples.  
   
-```{r}
+```{r, eval = F}
 #Ensure output folder exists
-out_folder <- "../Outputs/SouthernOceanMasks"
+out_folder <- "/rd/gem/private/shared_resources/SouthernOceanMasks"
 if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
@@ -99,13 +111,14 @@ for(ras in sample_rasters){
 We will plot one mask to ensure it has been correctly created.  
   
 ```{r}
-ras <- rast("../Outputs/SouthernOceanMasks/Southern_Ocean_mask_1deg_DBPM.nc")
+ras <- rast(list.files("/rd/gem/private/shared_resources/SouthernOceanMasks/", 
+                       "w-fractions", full.names = T))
 plot(ras)
 ```
   
 The final mask matches the region, which is exactly what we needed. We are now going to save a data frame containing the name of the Southern Ocean regions and their unique ID so they can be easily interpreted.  
   
-```{r}
+```{r, eval = FALSE}
 southern_ocean |> 
   st_drop_geometry() |> 
   distinct() |> 
