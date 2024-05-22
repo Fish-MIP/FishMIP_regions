@@ -1,4 +1,4 @@
-# FishMIP_regional models
+# FishMIP Regional Ecosystem Models
 The Fisheries and Marine Ecosystem Model Intercomparison Project ([Fish-MIP](https://fish-mip.github.io/)) aims to improve our understanding of the long-term impacts of climate change on fisheries and marine ecosystems, so we can improve future projections, which in turn can help inform policy.  
   
 Our include includes several global and regional ecosystem models. In this repository, we create a single shapefile containing all regional model contributions to Fish-MIP. We can use this file to create [maps](Outputs/FishMIP_regional_models.pdf) and to extract forcing data from Earth System Models (ESMs) for regional ecosystem modelers.  
