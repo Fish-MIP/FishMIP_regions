@@ -132,7 +132,7 @@ and create a map. We will exclude the Southern Ocean region.
 
 ``` r
 fishmip_reg <- file.path("/rd/gem/private/shared_resources/",
-                         "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+                       "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
   read_sf() |> 
   filter(region != "Southern Ocean")
 
@@ -140,12 +140,12 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources/",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 31 features and 3 fields
+    ## Simple feature collection with 34 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 31 × 4
+    ## # A tibble: 34 × 4
     ##    region                   models             nmbr_md                  geometry
     ##  * <chr>                    <chr>                <int>        <MULTIPOLYGON [°]>
     ##  1 Baltic Sea EwE           EwE                      1 (((23.5 64.5, 23.5 64.05…
@@ -158,11 +158,11 @@ fishmip_reg
     ##  8 East Antarctica Atlantis Atlantis                 1 (((81.87166 -53.63183, 1…
     ##  9 East Antarctica EwE      EwE                      1 (((80 -64, 80 -68.00585,…
     ## 10 East Bass Strait         EwE                      1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 21 more rows
+    ## # ℹ 24 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 31 polygons left.
+Since we removed the Southern Ocean region, we have 34 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -189,9 +189,9 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c("#ee3377", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
-         "#ee7733", "#332288", "#ccddaa", "#009988", 
-         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"))
+pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
+         "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a",
+         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -248,14 +248,15 @@ We will use the base map above to create these smaller maps.
 ``` r
 europe <- reg+
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
+  geom_sf(inherit.aes = T, aes(alpha = 0.6))+
   #Remove background
   theme_bw()+
   #Remove legend
   theme(legend.position = "none")+
   #Add world base map
   geom_sf(data = world, fill = "#f9f9f5")+
-  #Focus on Europe. Note that we use coordinates in meters because data is reprojected
+  #Focus on Europe. Note that we use coordinates in meters because data is 
+  #reprojected
   lims(x = c(-741458, 3251458), y = c(3256289, 6725154))+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#0077bb", linewidth = 2),
@@ -263,8 +264,8 @@ europe <- reg+
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154, ymin = 3156289), 
-                  crs = rob_proj) |> 
+eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154, 
+                    ymin = 3156289), crs = rob_proj) |> 
   st_as_sfc()
 
 #Check map of Europe
@@ -284,7 +285,7 @@ au_nz <- fishmip_reg |>
   st_shift_longitude() |>
   ggplot()+
   #We will increase transparency to see overlapping areas better
-  geom_sf(aes(fill = region), alpha = 0.5)+
+  geom_sf(aes(fill = region), alpha = 0.6)+
   #Add world base map
   geom_sf(inherit.aes = F, data = world, fill = "#f9f9f5", show.legend = F)+
   #Focus on Australia and New Zealand
