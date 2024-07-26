@@ -109,7 +109,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(8, "Set2"), 
+pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(9, "Set3"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a",
          "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"), "#ea4648")
 

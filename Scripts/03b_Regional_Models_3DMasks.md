@@ -246,7 +246,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 35 × 2
+    ## # A tibble: 36 × 2
     ##       id region                  
     ##    <int> <chr>                   
     ##  1     1 Baltic Sea EwE          
@@ -259,7 +259,7 @@ reg_keys
     ##  8     8 East Antarctica Atlantis
     ##  9     9 East Antarctica EwE     
     ## 10    10 East Bass Strait        
-    ## # ℹ 25 more rows
+    ## # ℹ 26 more rows
 
 ## How to use raster mask
 
@@ -343,7 +343,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 23797 Columns: 4
+    ## Rows: 24048 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -374,7 +374,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 23797 Columns: 4
+    ## Rows: 24048 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
