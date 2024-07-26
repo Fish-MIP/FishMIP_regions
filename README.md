@@ -20,3 +20,4 @@ Due to the large size of files, we are not able to share all individual model bo
 ## Have questions or suggestions?
 Feel free to create an [Issue](https://github.com/Fish-MIP/FishMIP_regions/issues) or [email us](mailto:fishmip.coordinators@gmail.com).  
   
+If your query is about data extraction for your regional model, please start an issue using the [`Data extraction request` template](https://github.com/Fish-MIP/FishMIP_regions/issues/new?assignees=lidefi87&labels=&projects=&template=data-extraction-request.md&title=Data+extraction+request). Make sure you provide all details requested so we can extract the data correctly.  
