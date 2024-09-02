@@ -6,8 +6,8 @@ Denisse Fierro Arcos
 - <a href="#introduction" id="toc-introduction">Introduction</a>
 - <a href="#loading-libraries" id="toc-loading-libraries">Loading
   libraries</a>
-- <a href="#loading-fish-mip-regional-models-shapefile"
-  id="toc-loading-fish-mip-regional-models-shapefile">Loading Fish-MIP
+- <a href="#loading-fishmip-regional-models-shapefile"
+  id="toc-loading-fishmip-regional-models-shapefile">Loading FishMIP
   regional models shapefile</a>
 - <a href="#finding-location-of-raster-samples"
   id="toc-finding-location-of-raster-samples">Finding location of raster
@@ -45,7 +45,7 @@ library(tidyverse)
 library(rnaturalearth)
 ```
 
-# Loading Fish-MIP regional models shapefile
+# Loading FishMIP regional models shapefile
 
 We will load the shapefile with all Fish-MIP regional model boundaries
 and add a unique ID identifying each region.
@@ -246,7 +246,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 36 × 2
+    ## # A tibble: 37 × 2
     ##       id region                  
     ##    <int> <chr>                   
     ##  1     1 Baltic Sea EwE          
@@ -259,7 +259,7 @@ reg_keys
     ##  8     8 East Antarctica Atlantis
     ##  9     9 East Antarctica EwE     
     ## 10    10 East Bass Strait        
-    ## # ℹ 26 more rows
+    ## # ℹ 27 more rows
 
 ## How to use raster mask
 
@@ -343,7 +343,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 24048 Columns: 4
+    ## Rows: 24483 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -374,7 +374,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 24048 Columns: 4
+    ## Rows: 24483 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region

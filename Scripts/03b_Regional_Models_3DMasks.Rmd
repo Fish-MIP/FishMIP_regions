@@ -27,7 +27,7 @@ library(tidyverse)
 library(rnaturalearth)
 ```
   
-# Loading Fish-MIP regional models shapefile
+# Loading FishMIP regional models shapefile
 We will load the shapefile with all Fish-MIP regional model boundaries and add a unique ID identifying each region.  
   
 ```{r}
