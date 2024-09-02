@@ -79,8 +79,8 @@ rm(list = ls())
 Now that we have downloaded the merged shapefiles, we can load it to `R` and create a map. We will exclude the Southern Ocean region.  
   
 ```{r}
-fishmip_reg <- file.path("/rd/gem/private/shared_resources/",
-                       "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+fishmip_reg <- file.path("/rd/gem/private/shared_resources",
+                         "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
   read_sf() |> 
   filter(region != "Southern Ocean")
 
@@ -109,8 +109,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   st_transform(rob_proj)
 
 #Creating a colour palette by merging colour brewer palettes
-pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(9, "Set3"), 
-         "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a",
+pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
+         "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
          "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
