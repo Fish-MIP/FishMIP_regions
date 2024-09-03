@@ -161,12 +161,12 @@ from the original HTML format.
 svg_workflow <- export_svg(p)
 
 #Saving as svg
-writeLines(svg_workflow, "../Outputs/FishMIP_regional_model_workflow.svg")
+writeLines(svg_workflow, "../outputs/FishMIP_regional_model_workflow.svg")
 ```
 
 If we prefer, we can change the format from `svg` to `png`.
 
 ``` r
-rsvg_png("../Outputs/FishMIP_regional_model_workflow.svg", 
-         "../Outputs/FishMIP_regional_model_workflow.png")
+rsvg_png("../outputs/FishMIP_regional_model_workflow.svg", 
+         "../outputs/FishMIP_regional_model_workflow.png")
 ```

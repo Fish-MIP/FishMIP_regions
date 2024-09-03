@@ -112,7 +112,7 @@ url <- paste0(base_http, fishmip_reg$get_datasets()[[ds_name]]$url)
 curl_download(url, destfile = "FishMIP_regions.zip")
 
 #Unzipping folder - storing files in Output folder
-out_folder <- "../Outputs"
+out_folder <- "../outputs"
 #If folder does not exist, create one
 if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
@@ -408,10 +408,10 @@ server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 
 ``` r
 #Saving final map
-ggsave("../Outputs/FishMIP_regional_models_insets.pdf", final_map, 
+ggsave("../outputs/FishMIP_regional_models_insets.pdf", final_map, 
        device = "pdf", width = 25, height = 15, units = "cm")
 
 #Saving main map with just regions and no insets
-ggsave("../Outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
+ggsave("../outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
        width = 9)
 ```
