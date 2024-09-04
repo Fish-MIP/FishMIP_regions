@@ -13,12 +13,11 @@ import xarray as xr
 import zarr
 import os
 from glob import glob
-import pandas as pds
+import pandas as pd
 import numpy as np
 from datetime import datetime
 import geopandas as gpd
 import rioxarray
-import matplotlib.pyplot as plt
 from dask.distributed import Client
 
 #Starting a cluster
@@ -126,12 +125,20 @@ def mask_ard_data(ard_da, shp_mask, file_out):
 
     #Check file extension included in path to save data
     if file_out.endswith('zarr'):
-        da_mask.to_zarr(file_out, consolidated = True)
+        for i, c in enumerate(da_mask.chunks):
+            if len(c) > 1 and len(set(c)) > 1:
+                print(f'Rechunking {file_out}'.)
+                print(f'Dimension "{da_mask.dims[i]}" has unequal chunks.')
+                da_mask = da_mask.chunk({da_mask.dims[i]: '200MB'})
+        da_mask.to_zarr(file_out, consolidated = True, mode = 'w')
     if file_out.endswith('parquet'):
         #Keep data array attributes to be recorded in final data frame
         da_attrs = ard_da.attrs
         da_attrs = pd.DataFrame([da_attrs])
-        ind_wider = ['lat', 'lon', 'time', 'vals']
+        if 'time' in ard_da.coords:
+            ind_wider = ['lat', 'lon', 'time', 'vals']
+        else:
+            ind_wider = ['lat', 'lon', 'vals']
         #Turn extracted data into data frame and remove rows with NA values
         df = da_mask.to_series().to_frame().reset_index().dropna()
         #Changing column name to standardise across variables
@@ -148,6 +155,7 @@ def mask_ard_data(ard_da, shp_mask, file_out):
 for f in list_files:
     #Open data array as ARD
     da = open_ard_data(f, mask_ras)
+    da_clim = da.mean('time')
 
     #Create file name based on presence of depth dimension
     if 'depth_bin_m' in da.dims:
@@ -155,7 +163,8 @@ for f in list_files:
     else:
         base_file_out = os.path.basename(f).replace('.nc', '.parquet')
     #Adding output folder to create full file path
-    base_file_out = os.path.join(base_out, base_file_out)
+    down_file_out = os.path.join(base_out, base_file_out)
+    map_file_out = os.path.join(clim_out, base_file_out)
 
     #Extract data for each region included in the regional mask
     for i in rmes.region:
@@ -164,6 +173,12 @@ for f in list_files:
         #Get name of region and clean it for use in output file
         reg_name = mask['region'].values[0].lower().replace(" ", "-").replace("'", "")
         #File name out - Replacing "global" for region name
-        file_out = base_file_out.replace('global', reg_name)
-        #Extract data and save masked data
+        file_out = down_file_out.replace('global', reg_name)
+        maps_file_out = map_file_out.replace('global', reg_name)
+        #Extract data and save masked data - but only if file does not already exist
+        if os.path.isdir(file_out) | os.path.isfile(file_out):
+            continue
         mask_ard_data(da, mask, file_out)
+        if os.path.isdir(maps_file_out) | os.path.isfile(maps_file_out):
+            continue
+        mask_ard_data(da_clim, mask, maps_file_out)
