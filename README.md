@@ -7,7 +7,7 @@ If you are interested in submitting your regional model to the FishMIP group, pl
   
 Due to the large size of files, we are not able to share all individual model boundaries, but we are sharing a compressed (`zip`) folder containing the shapefile with all FishMIP regions in the [Outputs folder](Outputs/FishMIP_regional_models.zip). Alternatively, this shapefile is also available from the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.html).  
   
-![Map of FishMIP regional models](Outputs/FishMIP_regional_models.png)
+![Map of FishMIP regional models](outputs/FishMIP_regional_models.png)
 
 ## Table of contents
 - [Creating regional model workflow figure](00_Regional_model_workflow.md): In this `Rmarkdown` notebook, we use the `DiagrammeR` package to create a workflow diagram for the FishMIP regional models.
