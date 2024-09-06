@@ -151,7 +151,7 @@ width = "100%", height = "100%")
 p
 ```
 
-![](00_Regional_model_workflow_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](figures/00_Regional_model_workflow_files/unnamed-chunk-2-1.png)<!-- -->
 
 We can now save it as an `svg` image, but first we need to transform
 from the original HTML format.
