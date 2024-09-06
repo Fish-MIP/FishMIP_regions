@@ -232,7 +232,7 @@ reg <- fishmip_reg_rob |>
 reg
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-3-1.png)<!-- -->
 
 Our initial maps shows all FishMIP regions, but does not look great yet.
 We will use this as a guide to identify the areas where we will create
@@ -272,7 +272,7 @@ eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154,
 europe
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-4-1.png)<!-- -->
 
 ### Australia and New Zealand
 
@@ -332,7 +332,7 @@ au_nz_box <- st_union(st_bbox(c(xmin = 115, xmax = 180, ymax = -23, ymin = -50),
 au_nz
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-5-1.png)<!-- -->
 
 ### Southern Ocean
 
@@ -362,7 +362,7 @@ so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577, ymin = -762
 so
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-6-1.png)<!-- -->
 
 ### Adding boundaries of inset maps into main map
 
@@ -375,7 +375,7 @@ main <- reg+
 main
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-7-1.png)<!-- -->
 
 ### Merging main map with inset maps
 
@@ -393,7 +393,7 @@ final_map <- final_map+
 final_map
 ```
 
-![](02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](figures/02_Mapping_Regional_Models_files/unnamed-chunk-8-1.png)<!-- -->
 
 The map above may not look great in your screen, but once it is saved to
 your local machine, it will plot correctly. However, you can change the

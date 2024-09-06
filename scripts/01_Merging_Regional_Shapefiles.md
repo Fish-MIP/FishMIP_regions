@@ -146,7 +146,7 @@ ggplot()+
   guides(fill = guide_legend(ncol = 4))
 ```
 
-![](01_Merging_Regional_Shapefiles_files/figure-gfm/map-1.png)<!-- -->
+![](figures/01_Merging_Regional_Shapefiles_files/map-1.png)<!-- -->
 
 The merged shapefile includes 37 different regions, which matches the
 number of regional FishMIP models. We can now save this merged file.

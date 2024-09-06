@@ -66,7 +66,7 @@ ne_countries(returnclass = "sf") |>
   theme_bw()
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-1-1.png)<!-- -->
 
 Our shapefile is plotting correctly, now we can move onto creating
 raster masks. In total, we will create four different multidimensional
@@ -223,7 +223,7 @@ plot(ras)
     ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
     ## or Vertical dimension.
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-6-1.png)<!-- -->
 
 # Saving raster mask keys
 
@@ -289,7 +289,7 @@ extract_data <- sample*east_ant
 plot(extract_data)
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-8-1.png)<!-- -->
 
 # Data frame mask
 
@@ -363,7 +363,7 @@ extract_df |>
   geom_raster(aes(x = lon, y = lat, fill = areacello))
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-11-1.png)<!-- -->
 
 You can also apply the mask to extract all data at once.
 
@@ -391,7 +391,7 @@ extract_df_all |>
   geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello))
 ```
 
-![](03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-12-1.png)<!-- -->
 
 **Note:** When you use a mask, whether in raster or `csv` form, the grid
 for the mask and the data being extracted **MUST** be the same.
