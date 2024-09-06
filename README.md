@@ -10,15 +10,15 @@ Due to the large size of files, we are not able to share all individual model bo
 ![Map of FishMIP regional models](outputs/FishMIP_regional_models.png)
 
 ## Table of contents
-- [Creating regional model workflow figure](00_Regional_model_workflow.md): In this `Rmarkdown` notebook, we use the `DiagrammeR` package to create a workflow diagram for the FishMIP regional models.
-- [Merging regional shapefiles into a single file](Scripts/01_Merging_Regional_Shapefiles.md): Describe how we created a single shapefile containing all regional model boundaries.  
-- [Mapping regional shapefiles](Scripts/02_Mapping_Regional_Models.md): Creates a simple map with all FishMIP regional models (except Southern Ocean). It also creates a mpa with inset to highlight areas that are difficult to see at the global scale.  
-- [Creating two dimensional raster masks](Scripts/03a_Regional_Models_2DMasks.md): This `Rmarkdown` shows how to create a simple raster mask (when boundaries do not overlap) that can be used to extract data from ESM outputs. It uses the original Southern Ocean model boundary containing subregions.     
-- [Creating three dimensional raster masks](Scripts/03b_Regional_Models_3DMasks.md): How to create a 3D raster mask (when boundaries do overlap) that can be used to extract data from ESM outputs.  
-- [Extracting forcing data for ecosystem models](Scripts/04_regional_data_extractions.ipynb): We extract data from GFDL-MOM6-COBALT2 using the regional gridded mask and shapefile. Data extracted is saved in cloud optimised formats: `zarr` for gridded data (where a `depth` dimension is present) and `parquet` for tabular data.  
-- [Outputs folder](Outputs/): Contains a copy of the FishMIP regional shapefile in a compressed folder, maps created from this shapefile, and the workflow figure as `svg` and `png` formats.  
+- [Creating regional model workflow figure](scripts/00_Regional_model_workflow.md): In this `Rmarkdown` notebook, we use the `DiagrammeR` package to create a workflow diagram for the FishMIP regional models.
+- [Merging regional shapefiles into a single file](scripts/01_Merging_Regional_Shapefiles.md): Describe how we created a single shapefile containing all regional model boundaries.  
+- [Mapping regional shapefiles](scripts/02_Mapping_Regional_Models.md): Creates a simple map with all FishMIP regional models (except Southern Ocean). It also creates a mpa with inset to highlight areas that are difficult to see at the global scale.  
+- [Creating two dimensional raster masks](scripts/03a_Regional_Models_2DMasks.md): This `Rmarkdown` shows how to create a simple raster mask (when boundaries do not overlap) that can be used to extract data from ESM outputs. It uses the original Southern Ocean model boundary containing subregions.     
+- [Creating three dimensional raster masks](scripts/03b_Regional_Models_3DMasks.md): How to create a 3D raster mask (when boundaries do overlap) that can be used to extract data from ESM outputs.  
+- [Extracting forcing data for ecosystem models](scripts/04_regional_data_extractions.ipynb): We extract data from GFDL-MOM6-COBALT2 using the regional gridded mask and shapefile. Data extracted is saved in cloud optimised formats: `zarr` for gridded data (where a `depth` dimension is present) and `parquet` for tabular data.  
+- [Outputs folder](outputs/): Contains a copy of the FishMIP regional shapefile in a compressed folder, maps created from this shapefile, and the workflow figure as `svg` and `png` formats.  
 
-## Contibutors
+## Contributors
 - [Denisse Fierro Arcos](https://github.com/lidefi87)  
 - [Kelly Cisneros Ortega](https://github.com/kortegac)  
 - [Tormey Reimer](https://github.com/stormeyseas)  
