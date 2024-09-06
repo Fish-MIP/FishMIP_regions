@@ -16,6 +16,7 @@ Due to the large size of files, we are not able to share all individual model bo
 - [Creating two dimensional raster masks](scripts/03a_Regional_Models_2DMasks.md): This `Rmarkdown` shows how to create a simple raster mask (when boundaries do not overlap) that can be used to extract data from ESM outputs. It uses the original Southern Ocean model boundary containing subregions.     
 - [Creating three dimensional raster masks](scripts/03b_Regional_Models_3DMasks.md): How to create a 3D raster mask (when boundaries do overlap) that can be used to extract data from ESM outputs.  
 - [Extracting forcing data for ecosystem models](scripts/04_regional_data_extractions.ipynb): We extract data from GFDL-MOM6-COBALT2 using the regional gridded mask and shapefile. Data extracted is saved in cloud optimised formats: `zarr` for gridded data (where a `depth` dimension is present) and `parquet` for tabular data.  
+- [Getting metadata from GFDL-MOM6-COBALT2 output files](scripts/05_compiling_GFDL_metadata.ipynb): In this Jupyter notebook, we use Python to extract metadata from the original GFDL-MOM6-COBALT2 `netcdf` output files, which can be used at a later date to interpret data.
 - [Outputs folder](outputs/): Contains a copy of the FishMIP regional shapefile in a compressed folder, maps created from this shapefile, and the workflow figure as `svg` and `png` formats.  
 
 ## Contributors
