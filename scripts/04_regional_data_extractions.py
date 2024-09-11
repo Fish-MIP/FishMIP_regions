@@ -172,3 +172,42 @@ for f in list_files:
         if os.path.isdir(file_out) | os.path.isfile(file_out):
             continue
         mask_ard_data(da, mask, file_out)
+
+
+# Extracting area of grid cell
+# We can use the same functions defined above to extract and save the area of the grid 
+# cell within the FishMIP regional model boundaries.
+#Define (or create) folder for outputs
+base_out = '/g/data/vf71/fishmip_inputs/ISIMIP3a/regional_inputs/obsclim/025deg/area_grid'
+os.makedirs(base_out, exist_ok = True)
+
+#Define base full file path to be used to name files
+base_file_out = os.path.join(base_out, 
+                             'gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.zarr')
+
+#Define location of grid cell area file
+area_file = os.path.join('/g/data/vf71/shared_resources/grid_cell_area_ESMs/isimip3a',
+                         'gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.nc')
+
+#Load file and rechunk to match mask
+da = xr.open_dataarray(area_file)
+da = da.chunk({'lat': 144, 'lon': 288})
+
+#Apply mask for all regions to decrease dataset size
+da = da.where(mask_ras == 1)
+
+#Add spatial information to dataset
+da.rio.set_spatial_dims(x_dim = 'lon', y_dim = 'lat', inplace = True)
+da.rio.write_crs('epsg:4326', inplace = True)
+
+for i in rmes.region:
+    #Get polygon for each region
+    mask = rmes[rmes.region == i]
+    #Get name of region and clean it for use in output file
+    reg_name = mask['region'].values[0].lower().replace(" ", "-").replace("'", "")
+    #File name out - Replacing "global" for region name
+    file_out = base_file_out.replace('global', reg_name)
+    #Extract data and save masked data - but only if file does not already exist
+    if os.path.isdir(file_out) | os.path.isfile(file_out):
+        continue
+    mask_ard_data(da, mask, file_out)
