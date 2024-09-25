@@ -18,10 +18,6 @@ import numpy as np
 from datetime import datetime
 import geopandas as gpd
 import rioxarray
-from dask.distributed import Client
-
-#Starting a cluster
-client = Client(threads_per_worker = 1)
 
 # Loading gridded mask and regions shapefiles
 # We will use these files to extract data for each FishMIP regional model. Note
@@ -155,7 +151,6 @@ def mask_ard_data(ard_da, shp_mask, file_out):
 for f in list_files:
     #Open data array as ARD
     da = open_ard_data(f, mask_ras)
-    da_clim = da.mean('time')
 
     #Create file name based on presence of depth dimension
     if 'depth_bin_m' in da.dims:
@@ -163,8 +158,7 @@ for f in list_files:
     else:
         base_file_out = os.path.basename(f).replace('.nc', '.parquet')
     #Adding output folder to create full file path
-    down_file_out = os.path.join(base_out, base_file_out)
-    map_file_out = os.path.join(clim_out, base_file_out)
+    base_file_out = os.path.join(base_out, base_file_out)
 
     #Extract data for each region included in the regional mask
     for i in rmes.region:
@@ -173,12 +167,47 @@ for f in list_files:
         #Get name of region and clean it for use in output file
         reg_name = mask['region'].values[0].lower().replace(" ", "-").replace("'", "")
         #File name out - Replacing "global" for region name
-        file_out = down_file_out.replace('global', reg_name)
-        maps_file_out = map_file_out.replace('global', reg_name)
+        file_out = base_file_out.replace('global', reg_name)
         #Extract data and save masked data - but only if file does not already exist
         if os.path.isdir(file_out) | os.path.isfile(file_out):
             continue
         mask_ard_data(da, mask, file_out)
-        if os.path.isdir(maps_file_out) | os.path.isfile(maps_file_out):
-            continue
-        mask_ard_data(da_clim, mask, maps_file_out)
+
+
+# Extracting area of grid cell
+# We can use the same functions defined above to extract and save the area of the grid 
+# cell within the FishMIP regional model boundaries.
+#Define (or create) folder for outputs
+base_out = '/g/data/vf71/fishmip_inputs/ISIMIP3a/regional_inputs/obsclim/025deg/area_grid'
+os.makedirs(base_out, exist_ok = True)
+
+#Define base full file path to be used to name files
+base_file_out = os.path.join(base_out, 
+                             'gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.zarr')
+
+#Define location of grid cell area file
+area_file = os.path.join('/g/data/vf71/shared_resources/grid_cell_area_ESMs/isimip3a',
+                         'gfdl-mom6-cobalt2_areacello_15arcmin_global_fixed.nc')
+
+#Load file and rechunk to match mask
+da = xr.open_dataarray(area_file)
+da = da.chunk({'lat': 144, 'lon': 288})
+
+#Apply mask for all regions to decrease dataset size
+da = da.where(mask_ras == 1)
+
+#Add spatial information to dataset
+da.rio.set_spatial_dims(x_dim = 'lon', y_dim = 'lat', inplace = True)
+da.rio.write_crs('epsg:4326', inplace = True)
+
+for i in rmes.region:
+    #Get polygon for each region
+    mask = rmes[rmes.region == i]
+    #Get name of region and clean it for use in output file
+    reg_name = mask['region'].values[0].lower().replace(" ", "-").replace("'", "")
+    #File name out - Replacing "global" for region name
+    file_out = base_file_out.replace('global', reg_name)
+    #Extract data and save masked data - but only if file does not already exist
+    if os.path.isdir(file_out) | os.path.isfile(file_out):
+        continue
+    mask_ard_data(da, mask, file_out)
