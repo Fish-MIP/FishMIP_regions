@@ -32,7 +32,9 @@ rmes = gpd.read_file(os.path.join('/g/data/vf71/shared_resources',\
 path_mask_ras = os.path.join('/g/data/vf71/shared_resources/FishMIPMasks',\
                 'merged_regional_fishmip',\
                 'gfdl-mom6-cobalt2_areacello_15arcmin_fishMIP_regional_merged.nc')
-mask_ras = xr.open_dataarray(path_mask_ras)
+mask_ras = xr.open_dataset(path_mask_ras).region
+#Renaming coordinate dimensions
+mask_ras = mask_ras.rename({'latitude': 'lat', 'longitude': 'lon'})
 #Rechunking data to make it more manageable
 mask_ras = mask_ras.chunk({'lat': 144, 'lon': 288})
 
