@@ -66,7 +66,7 @@ ne_countries(returnclass = "sf") |>
   theme_bw()
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-1-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 Our shapefile is plotting correctly, now we can move onto creating
 raster masks. In total, we will create four different multidimensional
@@ -223,7 +223,7 @@ plot(ras)
     ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
     ## or Vertical dimension.
 
-![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-6-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 # Saving raster mask keys
 
@@ -289,7 +289,7 @@ extract_data <- sample*east_ant
 plot(extract_data)
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-8-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 # Data frame mask
 
@@ -343,7 +343,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 24082 Columns: 4
+    ## Rows: 24051 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -363,7 +363,7 @@ extract_df |>
   geom_raster(aes(x = lon, y = lat, fill = areacello))
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-11-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 You can also apply the mask to extract all data at once.
 
@@ -374,7 +374,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 24082 Columns: 4
+    ## Rows: 24051 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -391,7 +391,7 @@ extract_df_all |>
   geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello))
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/unnamed-chunk-12-1.png)<!-- -->
+![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 **Note:** When you use a mask, whether in raster or `csv` form, the grid
 for the mask and the data being extracted **MUST** be the same.
