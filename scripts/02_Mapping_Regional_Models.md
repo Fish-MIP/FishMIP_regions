@@ -140,12 +140,12 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 36 features and 3 fields
+    ## Simple feature collection with 39 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 36 × 4
+    ## # A tibble: 39 × 4
     ##    region                   models             nmbr_md                  geometry
     ##  * <chr>                    <chr>                <int>        <MULTIPOLYGON [°]>
     ##  1 Baltic Sea EwE           EwE                      1 (((23.5 64.5, 23.5 64.05…
@@ -158,11 +158,11 @@ fishmip_reg
     ##  8 East Antarctica Atlantis Atlantis                 1 (((81.87166 -53.63183, 1…
     ##  9 East Antarctica EwE      EwE                      1 (((80 -64, 80 -68.00585,…
     ## 10 East Bass Strait         EwE                      1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 26 more rows
+    ## # ℹ 29 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 36 polygons left.
+Since we removed the Southern Ocean region, we have 39 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -191,7 +191,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
-         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"), "#ea4648")
+         "#117733", "#997700", "#aa4499", brewer.pal(6, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -354,8 +354,8 @@ so <- reg+
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577, ymin = -7625154),
-                  crs = rob_proj) |>
+so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577,
+                    ymin = -7625154), crs = rob_proj) |>
   st_as_sfc()
 
 #Check map

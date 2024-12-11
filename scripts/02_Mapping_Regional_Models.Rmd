@@ -111,7 +111,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
-         "#117733", "#997700", "#aa4499", brewer.pal(3, "Dark2"), "#ea4648")
+         "#117733", "#997700", "#aa4499", brewer.pal(6, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -256,8 +256,8 @@ so <- reg+
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
 
 #Create a shapefile with map limits
-so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577, ymin = -7625154),
-                  crs = rob_proj) |>
+so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577,
+                    ymin = -7625154), crs = rob_proj) |>
   st_as_sfc()
 
 #Check map
