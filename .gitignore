@@ -50,3 +50,4 @@ rsconnect/
 
 #Jupyter checkpoints
 **/.ipynb_checkpoints/
+scripts/boolean_mask.ipynb
