@@ -111,7 +111,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
-         "#117733", "#997700", "#aa4499", brewer.pal(6, "Dark2"), "#ea4648")
+         "#117733", "#997700", "#aa4499", brewer.pal(7, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -299,7 +299,7 @@ The final map can be saved to your local machine. We will save it as vector imag
 ```{r eval = F}
 #Saving final map
 ggsave("../outputs/FishMIP_regional_models_insets.pdf", final_map, 
-       device = "pdf", width = 25, height = 15, units = "cm")
+       device = "pdf", width = 30, height = 15, units = "cm")
 
 #Saving main map with just regions and no insets
 ggsave("../outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 

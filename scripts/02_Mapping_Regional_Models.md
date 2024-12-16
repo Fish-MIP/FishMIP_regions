@@ -140,12 +140,12 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 39 features and 3 fields
+    ## Simple feature collection with 40 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 39 × 4
+    ## # A tibble: 40 × 4
     ##    region                   models             nmbr_md                  geometry
     ##  * <chr>                    <chr>                <int>        <MULTIPOLYGON [°]>
     ##  1 Baltic Sea EwE           EwE                      1 (((23.5 64.5, 23.5 64.05…
@@ -158,11 +158,11 @@ fishmip_reg
     ##  8 East Antarctica Atlantis Atlantis                 1 (((81.87166 -53.63183, 1…
     ##  9 East Antarctica EwE      EwE                      1 (((80 -64, 80 -68.00585,…
     ## 10 East Bass Strait         EwE                      1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 29 more rows
+    ## # ℹ 30 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 39 polygons left.
+Since we removed the Southern Ocean region, we have 40 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -191,7 +191,7 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
 #Creating a colour palette by merging colour brewer palettes
 pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
          "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
-         "#117733", "#997700", "#aa4499", brewer.pal(6, "Dark2"), "#ea4648")
+         "#117733", "#997700", "#aa4499", brewer.pal(7, "Dark2"), "#ea4648")
 
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
@@ -409,7 +409,7 @@ server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 ``` r
 #Saving final map
 ggsave("../outputs/FishMIP_regional_models_insets.pdf", final_map, 
-       device = "pdf", width = 25, height = 15, units = "cm")
+       device = "pdf", width = 30, height = 15, units = "cm")
 
 #Saving main map with just regions and no insets
 ggsave("../outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
