@@ -13,6 +13,9 @@ Denisse Fierro Arcos
   id="toc-finding-location-of-raster-samples">Finding location of raster
   samples</a>
 - <a href="#plotting-mask" id="toc-plotting-mask">Plotting mask</a>
+  - <a href="#creating-a-simple-2d-mask-for-all-fishmip-regions"
+    id="toc-creating-a-simple-2d-mask-for-all-fishmip-regions">Creating a
+    simple 2D mask for all FishMIP regions</a>
 
 ## Introduction
 
@@ -36,7 +39,7 @@ library(sf)
 library(terra)
 ```
 
-    ## terra 1.7.18
+    ## terra 1.8.15
 
 ``` r
 #Manipulating and plotting data
@@ -44,11 +47,11 @@ library(tidyverse)
 ```
 
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.1     ✔ readr     2.1.4
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.4
     ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-    ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+    ## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
     ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ✔ purrr     1.0.1
+    ## ✔ purrr     1.0.2
 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ tidyr::extract() masks terra::extract()
@@ -95,7 +98,7 @@ ne_countries(returnclass = "sf") |>
   theme_bw()
 ```
 
-![](figures/03a_Regional_Models_2DMasks_files/unnamed-chunk-1-1.png)<!-- -->
+![](figures/03a_Regional_Models_2DMasks_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 The Southern Ocean regions are plotting correctly, now we can move onto
 creating raster masks. In total, we will create four different masks to
@@ -128,19 +131,17 @@ We will define a function that will go through each sample file and
 create a mask.
 
 ``` r
-shp_to_raster <- function(shp, raster_path, out_folder){
+shp_to_raster <- function(shp, raster_path, field, name_sufix, out_folder){
   #Transforming shapefile to SpatVector class
   shp_terra <- vect(shp)
   #Loading raster
   ras <- rast(raster_path)
   #Rasterise shapefile
-  shp_rast <- rasterize(shp_terra, ras, field = "id", background = NA)
+  shp_rast <- rasterize(shp_terra, ras, field = field, background = NA)
   #Create name for mask to be saved from original raster sample
-  file_out <- str_replace(basename(raster_path), 
-                          "global", "Southern_Ocean_mask")
+  file_out <- str_replace(basename(raster_path), "global_fixed", name_sufix)
   file_out <- file.path(out_folder, file_out)
-  writeCDF(shp_rast, file_out, overwrite = T, varname = "region", 
-           longname = "regions of the SO", missval = NA)
+  writeCDF(shp_rast, file_out, overwrite = T, varname = "region", missval = NA)
 }
 ```
 
@@ -154,7 +155,7 @@ if(!dir.exists(out_folder)){
 
 #Applying function creating masks
 for(ras in sample_rasters){
-  shp_to_raster(southern_ocean, ras, out_folder)
+  shp_to_raster(southern_ocean, ras, "id", "Southern_Ocean_mask", out_folder)
 }
 ```
 
@@ -168,7 +169,7 @@ ras <- rast(list.files("/rd/gem/private/shared_resources/SouthernOceanMasks/",
 plot(ras)
 ```
 
-![](figures/03a_Regional_Models_2DMasks_files/unnamed-chunk-5-1.png)<!-- -->
+![](figures/03a_Regional_Models_2DMasks_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 The final mask matches the region, which is exactly what we needed. We
 are now going to save a data frame containing the name of the Southern
@@ -183,3 +184,21 @@ southern_ocean |>
 
 We can now use these masks to extract data from any rasters sharing the
 same grid as the mask.
+
+## Creating a simple 2D mask for all FishMIP regions
+
+``` r
+fishmip_reg <- read_sf(file.path("/rd/gem/private/shared_resources", 
+                                 "FishMIP_regional_models", 
+                                 "FishMIP_regional_models.shp"))
+
+out_folder <- file.path("/rd/gem/private/shared_resources/FishMIPMasks",
+                        "merged_regional_fishmip")
+if(!dir.exists(out_folder)){
+  dir.create(out_folder, recursive = T)}
+
+#Applying function creating masks
+for(ras in sample_rasters){
+  shp_to_raster(fishmip_reg, ras, 1, "fishMIP_regional_merged", out_folder)
+}
+```

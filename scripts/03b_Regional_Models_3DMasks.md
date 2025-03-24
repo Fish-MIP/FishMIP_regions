@@ -157,71 +157,39 @@ ras <- rast(list.files("/rd/gem/private/shared_resources/FishMIPMasks",
 plot(ras)
 ```
 
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
 
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
-    ## Warning in x@ptr$readStart(): GDAL Message 1: dimension #0 (time) is not a Time
-    ## or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
+    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
+    ## Time or Vertical dimension.
 
 ![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
@@ -246,20 +214,20 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 41 × 2
-    ##       id region                  
-    ##    <int> <chr>                   
-    ##  1     1 Baltic Sea EwE          
-    ##  2     2 Baltic Sea Mizer        
-    ##  3     3 Brazil NE               
-    ##  4     4 Central North Pacific   
-    ##  5     5 Central South Pacific   
-    ##  6     6 Chatham Rise            
-    ##  7     7 Cook Strait             
-    ##  8     8 East Antarctica Atlantis
-    ##  9     9 East Antarctica EwE     
-    ## 10    10 East Bass Strait        
-    ## # ℹ 31 more rows
+    ## # A tibble: 61 × 2
+    ##       id region                 
+    ##    <int> <chr>                  
+    ##  1     1 Arafura Sea            
+    ##  2     2 Aust east tuna billfish
+    ##  3     3 Baltic Sea EwE         
+    ##  4     4 Baltic Sea Mizer       
+    ##  5     5 Brazil NE              
+    ##  6     6 Central North Pacific  
+    ##  7     7 Central South Pacific  
+    ##  8     8 Chatham Rise           
+    ##  9     9 Christmas Island       
+    ## 10    10 Cocos Keeling          
+    ## # ℹ 51 more rows
 
 ## How to use raster mask
 
@@ -270,17 +238,18 @@ a binary mask to extract the data we need.
 #Load sample ESM data
 sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
-#We will choose mask 9 - East Antarctica (see keys above)
-east_ant <- ras[[9]]
+#We will choose mask 13 - East Antarctica (see keys above)
+east_ant <- ras[[13]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
 ```
 
-    ## Warning in x@ptr$isnan(FALSE, opt): GDAL Message 1: dimension #0 (time) is not
+    ## Warning in x@pntr$isnan(FALSE, opt): GDAL Message 1: dimension #0 (time) is not
     ## a Time or Vertical dimension.
 
-    ## Warning in x@ptr$mask_raster(mask@ptr, inverse[1], maskvalues, updatevalue[1],
-    ## : GDAL Message 1: dimension #0 (time) is not a Time or Vertical dimension.
+    ## Warning in x@pntr$mask_raster(mask@pntr, inverse[1], maskvalues,
+    ## updatevalue[1], : GDAL Message 1: dimension #0 (time) is not a Time or Vertical
+    ## dimension.
 
 ``` r
 #Multiply data and mask
@@ -343,7 +312,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 24199 Columns: 4
+    ## Rows: 27821 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -374,7 +343,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 24199 Columns: 4
+    ## Rows: 27821 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region

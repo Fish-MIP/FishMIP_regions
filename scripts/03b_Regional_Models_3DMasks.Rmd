@@ -141,8 +141,8 @@ If the ESM data is in raster form, we can transform the raster mask into a binar
 #Load sample ESM data
 sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
-#We will choose mask 9 - East Antarctica (see keys above)
-east_ant <- ras[[9]]
+#We will choose mask 13 - East Antarctica (see keys above)
+east_ant <- ras[[13]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
 
