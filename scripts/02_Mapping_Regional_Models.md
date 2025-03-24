@@ -140,29 +140,29 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 40 features and 3 fields
+    ## Simple feature collection with 60 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 40 × 4
-    ##    region                   models             nmbr_md                  geometry
-    ##  * <chr>                    <chr>                <int>        <MULTIPOLYGON [°]>
-    ##  1 Baltic Sea EwE           EwE                      1 (((23.5 64.5, 23.5 64.05…
-    ##  2 Baltic Sea Mizer         Mizer                    1 (((20.5847 54.93254, 20.…
-    ##  3 Brazil NE                EcoSpace                 1 (((-36.94482 -4.549031, …
-    ##  4 Central North Pacific    ECOTRAN                  1 (((-140 10, -180 10, -18…
-    ##  5 Central South Pacific    Mizer                    1 (((-168.2779 -22.09492, …
-    ##  6 Chatham Rise             Atlantis, EwE, Mi…       3 (((172 -45.33333, 172 -4…
-    ##  7 Cook Strait              EwE                      1 (((174 -42, 174 -41, 175…
-    ##  8 East Antarctica Atlantis Atlantis                 1 (((81.87166 -53.63183, 1…
-    ##  9 East Antarctica EwE      EwE                      1 (((80 -64, 80 -68.00585,…
-    ## 10 East Bass Strait         EwE                      1 (((150.5 -36, 150.5 -39,…
-    ## # ℹ 30 more rows
+    ## # A tibble: 60 × 4
+    ##    region                  models              nmbr_md                  geometry
+    ##  * <chr>                   <chr>                 <int>        <MULTIPOLYGON [°]>
+    ##  1 Arafura Sea             Atlantis                  1 (((129.2931 -8.981402, 1…
+    ##  2 Aust east tuna billfish Atlantis                  1 (((141.0431 -8.981403, 1…
+    ##  3 Baltic Sea EwE          EwE                       1 (((23.5 64.5, 23.5 64.05…
+    ##  4 Baltic Sea Mizer        Mizer                     1 (((20.5847 54.93254, 20.…
+    ##  5 Brazil NE               EcoSpace                  1 (((-36.94482 -4.549031, …
+    ##  6 Central North Pacific   ECOTRAN                   1 (((-140 10, -180 10, -18…
+    ##  7 Central South Pacific   Mizer                     1 (((-168.2779 -22.09492, …
+    ##  8 Chatham Rise            Atlantis, EwE, Miz…       3 (((172 -45.33333, 172 -4…
+    ##  9 Christmas Island        Atlantis                  1 (((102.077 -8.652076, 10…
+    ## 10 Cocos Keeling           Atlantis                  1 (((93.37704 -8.405315, 1…
+    ## # ℹ 50 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 40 polygons left.
+Since we removed the Southern Ocean region, we have 60 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -188,15 +188,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf") |>
   #Reprojecting
   st_transform(rob_proj)
 
-#Creating a colour palette by merging colour brewer palettes
-pal <- c("#ee3377", "#364b9a", brewer.pal(12, "Paired"), brewer.pal(10, "Set3"), 
-         "#ee7733", "#332288", "#ccddaa", "#009988", "#993d9a", 
-         "#117733", "#997700", "#aa4499", brewer.pal(7, "Dark2"), "#ea4648")
-
 #Reprojecting FishMIP regions
 fishmip_reg_rob <- fishmip_reg |> 
-  #Adding colour palette
-  mutate(fill = pal) |> 
   st_wrap_dateline() |> 
   st_transform(rob_proj)
 ```
@@ -217,7 +210,6 @@ reg <- fishmip_reg_rob |>
   #Using colours of our tailored made colourmap
   geom_sf(aes(fill = region), alpha = 0.5)+
   geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
-  scale_fill_manual(values = fishmip_reg_rob$fill)+
   theme_bw()+
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),
@@ -289,8 +281,7 @@ au_nz <- fishmip_reg |>
   #Add world base map
   geom_sf(inherit.aes = F, data = world, fill = "#f9f9f5", show.legend = F)+
   #Focus on Australia and New Zealand
-  lims(x = c(115, 200), y = c(-50, -23))+
-  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  lims(x = c(110, 200), y = c(-50, -10))+
   #Remove background
   theme_bw()+
   #Remove legend
@@ -304,8 +295,7 @@ Tas <- fishmip_reg |>
 
 #Plot Bass Strait over the original AU/NZ map
 au_nz <- au_nz+
-  geom_sf(inherit.aes = F, data = Tas, aes(fill = region), alpha = 0.5)+
-  scale_fill_manual(values = fishmip_reg_rob$fill)+
+  geom_sf(inherit.aes = F, data = Tas, aes(fill = region), alpha = 0.5)
   #Remove background
   theme_bw()+
   #Remove legend
@@ -314,17 +304,14 @@ au_nz <- au_nz+
   theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
-```
 
-    ## Scale for fill is already present.
-    ## Adding another scale for fill, which will replace the existing scale.
-
-``` r
 #Create a shapefile with map limits
-au_nz_box <- st_union(st_bbox(c(xmin = 115, xmax = 180, ymax = -23, ymin = -50),
-                              crs = 4326) |> st_as_sfc(),
-                      st_bbox(c(xmin = -180, xmax = 200, ymax = -23, ymin = -50),
-                              crs = 4326) |>  st_as_sfc()) |> 
+au_nz_box <- st_union(st_bbox(c(xmin = 110, xmax = 180, 
+                                ymax = -10, ymin = -50), crs = 4326) |> 
+                        st_as_sfc(),
+                      st_bbox(c(xmin = -180, xmax = 200, 
+                                ymax = -10, ymin = -50), crs = 4326) |> 
+                        st_as_sfc()) |> 
   #Projecting to Robinson
   st_transform(rob_proj)
 
@@ -384,7 +371,7 @@ main
 final_map <- ggdraw(main)+
   draw_plot(au_nz, x = .805, y = 0.675, width = 0.185, height = 0.3)+
   draw_plot(so, x = .815, y = 0.38, width = 0.175, height = 0.30)+
-  draw_plot(europe, x = .75, y = 0.04, width = 0.3, height = 0.3)
+  draw_plot(europe, x = .725, y = 0.04, width = 0.3, height = 0.3)
 
 final_map <- final_map+
   theme(plot.margin = margin(l = -5, unit = "cm"))
@@ -409,9 +396,9 @@ server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/catalog.html).
 ``` r
 #Saving final map
 ggsave("../outputs/FishMIP_regional_models_insets.pdf", final_map, 
-       device = "pdf", width = 30, height = 15, units = "cm")
+       device = "pdf", width = 35, height = 25, units = "cm")
 
 #Saving main map with just regions and no insets
 ggsave("../outputs/FishMIP_regional_models.pdf", reg, device = "pdf", 
-       width = 9)
+       width = 9, height = 9)
 ```
