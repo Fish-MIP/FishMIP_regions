@@ -108,7 +108,7 @@ world <- ne_countries(returnclass = "sf")
 #Plotting regions and map of the world
 ggplot()+
   geom_sf(data = world)+
-  geom_sf(data = regions, aes(fill = region, alpha = 0.5))+
+  geom_sf(data = regions, aes(fill = region, alpha = 0.5), show.legend = F)+
   theme_bw()+
   theme(legend.position = "bottom", legend.title = element_blank())+
   guides(fill = guide_legend(ncol = 4))
