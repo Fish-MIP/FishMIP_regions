@@ -140,12 +140,12 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 60 features and 3 fields
+    ## Simple feature collection with 61 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 60 × 4
+    ## # A tibble: 61 × 4
     ##    region                  models              nmbr_md                  geometry
     ##  * <chr>                   <chr>                 <int>        <MULTIPOLYGON [°]>
     ##  1 Arafura Sea             Atlantis                  1 (((129.2931 -8.981402, 1…
@@ -153,16 +153,16 @@ fishmip_reg
     ##  3 Baltic Sea EwE          EwE                       1 (((23.5 64.5, 23.5 64.05…
     ##  4 Baltic Sea Mizer        Mizer                     1 (((20.5847 54.93254, 20.…
     ##  5 Brazil NE               EcoSpace                  1 (((-36.94482 -4.549031, …
-    ##  6 Central North Pacific   ECOTRAN                   1 (((-140 10, -180 10, -18…
-    ##  7 Central South Pacific   Mizer                     1 (((-168.2779 -22.09492, …
-    ##  8 Chatham Rise            Atlantis, EwE, Miz…       3 (((172 -45.33333, 172 -4…
-    ##  9 Christmas Island        Atlantis                  1 (((102.077 -8.652076, 10…
-    ## 10 Cocos Keeling           Atlantis                  1 (((93.37704 -8.405315, 1…
-    ## # ℹ 50 more rows
+    ##  6 California Current      MICE                      1 (((-116.42 31.02, -116.4…
+    ##  7 Central North Pacific   ECOTRAN                   1 (((-140 10, -180 10, -18…
+    ##  8 Central South Pacific   Mizer                     1 (((-168.2779 -22.09492, …
+    ##  9 Chatham Rise            Atlantis, EwE, Miz…       3 (((172 -45.33333, 172 -4…
+    ## 10 Christmas Island        Atlantis                  1 (((102.077 -8.652076, 10…
+    ## # ℹ 51 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 60 polygons left.
+Since we removed the Southern Ocean region, we have 61 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -304,7 +304,298 @@ au_nz <- au_nz+
   theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
+```
 
+    ## List of 136
+    ##  $ line                            :List of 6
+    ##   ..$ colour       : chr "black"
+    ##   ..$ linewidth    : num 0.5
+    ##   ..$ linetype     : num 1
+    ##   ..$ lineend      : chr "butt"
+    ##   ..$ arrow        : logi FALSE
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
+    ##  $ rect                            :List of 5
+    ##   ..$ fill         : chr "white"
+    ##   ..$ colour       : chr "black"
+    ##   ..$ linewidth    : num 0.5
+    ##   ..$ linetype     : num 1
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+    ##  $ text                            :List of 11
+    ##   ..$ family       : chr ""
+    ##   ..$ face         : chr "plain"
+    ##   ..$ colour       : chr "black"
+    ##   ..$ size         : num 11
+    ##   ..$ hjust        : num 0.5
+    ##   ..$ vjust        : num 0.5
+    ##   ..$ angle        : num 0
+    ##   ..$ lineheight   : num 0.9
+    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : logi FALSE
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ title                           : NULL
+    ##  $ aspect.ratio                    : NULL
+    ##  $ axis.title                      : NULL
+    ##  $ axis.title.x                    :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 1
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.title.x.top                :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 0
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.title.x.bottom             : NULL
+    ##  $ axis.title.y                    :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 1
+    ##   ..$ angle        : num 90
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.title.y.left               : NULL
+    ##  $ axis.title.y.right              :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 1
+    ##   ..$ angle        : num -90
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.text                       : list()
+    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+    ##  $ axis.text.x                     :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 1
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.text.x.top                 :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : num 0
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.text.x.bottom              : NULL
+    ##  $ axis.text.y                     :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : num 1
+    ##   ..$ vjust        : NULL
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.text.y.left                : NULL
+    ##  $ axis.text.y.right               :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : num 0
+    ##   ..$ vjust        : NULL
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.text.theta                 : NULL
+    ##  $ axis.text.r                     :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : num 0.5
+    ##   ..$ vjust        : NULL
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 2.2points
+    ##   .. ..- attr(*, "unit")= int 8
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ axis.ticks                      : list()
+    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+    ##  $ axis.ticks.x                    : NULL
+    ##  $ axis.ticks.x.top                : NULL
+    ##  $ axis.ticks.x.bottom             : NULL
+    ##  $ axis.ticks.y                    : NULL
+    ##  $ axis.ticks.y.left               : NULL
+    ##  $ axis.ticks.y.right              : NULL
+    ##  $ axis.ticks.theta                : NULL
+    ##  $ axis.ticks.r                    : NULL
+    ##  $ axis.minor.ticks.x.top          : NULL
+    ##  $ axis.minor.ticks.x.bottom       : NULL
+    ##  $ axis.minor.ticks.y.left         : NULL
+    ##  $ axis.minor.ticks.y.right        : NULL
+    ##  $ axis.minor.ticks.theta          : NULL
+    ##  $ axis.minor.ticks.r              : NULL
+    ##  $ axis.ticks.length               : 'simpleUnit' num 2.75points
+    ##   ..- attr(*, "unit")= int 8
+    ##  $ axis.ticks.length.x             : NULL
+    ##  $ axis.ticks.length.x.top         : NULL
+    ##  $ axis.ticks.length.x.bottom      : NULL
+    ##  $ axis.ticks.length.y             : NULL
+    ##  $ axis.ticks.length.y.left        : NULL
+    ##  $ axis.ticks.length.y.right       : NULL
+    ##  $ axis.ticks.length.theta         : NULL
+    ##  $ axis.ticks.length.r             : NULL
+    ##  $ axis.minor.ticks.length         : 'rel' num 0.75
+    ##  $ axis.minor.ticks.length.x       : NULL
+    ##  $ axis.minor.ticks.length.x.top   : NULL
+    ##  $ axis.minor.ticks.length.x.bottom: NULL
+    ##  $ axis.minor.ticks.length.y       : NULL
+    ##  $ axis.minor.ticks.length.y.left  : NULL
+    ##  $ axis.minor.ticks.length.y.right : NULL
+    ##  $ axis.minor.ticks.length.theta   : NULL
+    ##  $ axis.minor.ticks.length.r       : NULL
+    ##  $ axis.line                       : list()
+    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+    ##  $ axis.line.x                     : NULL
+    ##  $ axis.line.x.top                 : NULL
+    ##  $ axis.line.x.bottom              : NULL
+    ##  $ axis.line.y                     : NULL
+    ##  $ axis.line.y.left                : NULL
+    ##  $ axis.line.y.right               : NULL
+    ##  $ axis.line.theta                 : NULL
+    ##  $ axis.line.r                     : NULL
+    ##  $ legend.background               :List of 5
+    ##   ..$ fill         : NULL
+    ##   ..$ colour       : logi NA
+    ##   ..$ linewidth    : NULL
+    ##   ..$ linetype     : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
+    ##  $ legend.margin                   : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
+    ##   ..- attr(*, "unit")= int 8
+    ##  $ legend.spacing                  : 'simpleUnit' num 11points
+    ##   ..- attr(*, "unit")= int 8
+    ##  $ legend.spacing.x                : NULL
+    ##  $ legend.spacing.y                : NULL
+    ##  $ legend.key                      : NULL
+    ##  $ legend.key.size                 : 'simpleUnit' num 1.2lines
+    ##   ..- attr(*, "unit")= int 3
+    ##  $ legend.key.height               : NULL
+    ##  $ legend.key.width                : NULL
+    ##  $ legend.key.spacing              : 'simpleUnit' num 5.5points
+    ##   ..- attr(*, "unit")= int 8
+    ##  $ legend.key.spacing.x            : NULL
+    ##  $ legend.key.spacing.y            : NULL
+    ##  $ legend.frame                    : NULL
+    ##  $ legend.ticks                    : NULL
+    ##  $ legend.ticks.length             : 'rel' num 0.2
+    ##  $ legend.axis.line                : NULL
+    ##  $ legend.text                     :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : 'rel' num 0.8
+    ##   ..$ hjust        : NULL
+    ##   ..$ vjust        : NULL
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : NULL
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ legend.text.position            : NULL
+    ##  $ legend.title                    :List of 11
+    ##   ..$ family       : NULL
+    ##   ..$ face         : NULL
+    ##   ..$ colour       : NULL
+    ##   ..$ size         : NULL
+    ##   ..$ hjust        : num 0
+    ##   ..$ vjust        : NULL
+    ##   ..$ angle        : NULL
+    ##   ..$ lineheight   : NULL
+    ##   ..$ margin       : NULL
+    ##   ..$ debug        : NULL
+    ##   ..$ inherit.blank: logi TRUE
+    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
+    ##  $ legend.title.position           : NULL
+    ##  $ legend.position                 : chr "none"
+    ##  $ legend.position.inside          : NULL
+    ##  $ legend.direction                : NULL
+    ##  $ legend.byrow                    : NULL
+    ##  $ legend.justification            : chr "center"
+    ##  $ legend.justification.top        : NULL
+    ##  $ legend.justification.bottom     : NULL
+    ##  $ legend.justification.left       : NULL
+    ##  $ legend.justification.right      : NULL
+    ##  $ legend.justification.inside     : NULL
+    ##  $ legend.location                 : NULL
+    ##  $ legend.box                      : NULL
+    ##  $ legend.box.just                 : NULL
+    ##  $ legend.box.margin               : 'margin' num [1:4] 0cm 0cm 0cm 0cm
+    ##   ..- attr(*, "unit")= int 1
+    ##  $ legend.box.background           : list()
+    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
+    ##  $ legend.box.spacing              : 'simpleUnit' num 11points
+    ##   ..- attr(*, "unit")= int 8
+    ##   [list output truncated]
+    ##  - attr(*, "class")= chr [1:2] "theme" "gg"
+    ##  - attr(*, "complete")= logi TRUE
+    ##  - attr(*, "validate")= logi TRUE
+
+``` r
 #Create a shapefile with map limits
 au_nz_box <- st_union(st_bbox(c(xmin = 110, xmax = 180, 
                                 ymax = -10, ymin = -50), crs = 4326) |> 
