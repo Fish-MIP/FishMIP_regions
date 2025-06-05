@@ -97,7 +97,7 @@ region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
 
 ## Loading regions
 
-As of December 2023, there are 61 regional FishMIP models. We will use
+As of December 2023, there are 62 regional FishMIP models. We will use
 the boundaries for all these regions to create a single shapefile that
 includes all FishMIP regional models. Having a single file is useful to
 create maps showing all regional models easily. This file can also be
@@ -148,7 +148,7 @@ ggplot()+
 
 ![](figures/01_Merging_Regional_Shapefiles_files/figure-gfm/map-1.png)<!-- -->
 
-The merged shapefile includes 61 different regions, which matches the
+The merged shapefile includes 62 different regions, which matches the
 number of regional FishMIP models. We can now save this merged file.
 
 ``` r
