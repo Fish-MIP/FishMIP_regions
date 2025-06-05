@@ -141,8 +141,8 @@ If the ESM data is in raster form, we can transform the raster mask into a binar
 #Load sample ESM data
 sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
-#We will choose mask 13 - East Antarctica (see keys above)
-east_ant <- ras[[13]]
+#We will choose mask 7 - Central North Pacific (see keys above)
+east_ant <- ras[[7]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
 
@@ -195,7 +195,7 @@ sample_df <- sample |>
 #Load raster mask
 mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
                                full.names = T)) |> 
-  #We will choose mask 9 - East Antarctica (see keys above)
+  #We will choose East Antarctica - EwE
   filter(region == "East Antarctica EwE")
 
 #Apply mask to ESM data
@@ -220,7 +220,8 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
 extract_df_all |> 
   ggplot()+
   #Color by region, transparency by area
-  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello))
+  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello), 
+              show.legend = F)
 ```
   
 **Note:** When you use a mask, whether in raster or `csv` form, the grid for the mask and the data being extracted **MUST** be the same. Otherwise, data extraction will fail.  

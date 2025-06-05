@@ -214,7 +214,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 61 × 2
+    ## # A tibble: 62 × 2
     ##       id region                 
     ##    <int> <chr>                  
     ##  1     1 Arafura Sea            
@@ -222,12 +222,12 @@ reg_keys
     ##  3     3 Baltic Sea EwE         
     ##  4     4 Baltic Sea Mizer       
     ##  5     5 Brazil NE              
-    ##  6     6 Central North Pacific  
-    ##  7     7 Central South Pacific  
-    ##  8     8 Chatham Rise           
-    ##  9     9 Christmas Island       
-    ## 10    10 Cocos Keeling          
-    ## # ℹ 51 more rows
+    ##  6     6 California Current     
+    ##  7     7 Central North Pacific  
+    ##  8     8 Central South Pacific  
+    ##  9     9 Chatham Rise           
+    ## 10    10 Christmas Island       
+    ## # ℹ 52 more rows
 
 ## How to use raster mask
 
@@ -238,8 +238,8 @@ a binary mask to extract the data we need.
 #Load sample ESM data
 sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
-#We will choose mask 13 - East Antarctica (see keys above)
-east_ant <- ras[[13]]
+#We will choose mask 7 - Central North Pacific (see keys above)
+east_ant <- ras[[7]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
 ```
@@ -308,11 +308,11 @@ sample_df <- sample |>
 #Load raster mask
 mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
                                full.names = T)) |> 
-  #We will choose mask 9 - East Antarctica (see keys above)
+  #We will choose East Antarctica - EwE
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 27821 Columns: 4
+    ## Rows: 27887 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -343,7 +343,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 27821 Columns: 4
+    ## Rows: 27887 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -357,7 +357,8 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
 extract_df_all |> 
   ggplot()+
   #Color by region, transparency by area
-  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello))
+  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello), 
+              show.legend = F)
 ```
 
 ![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
