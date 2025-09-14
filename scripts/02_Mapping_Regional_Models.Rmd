@@ -17,6 +17,7 @@ Here, we will show how to access and download the FishMIP regional models shapef
 # Loading libraries
   
 ```{r libraries}
+knitr::opts_chunk$set(fig.path = "figures/")
 #Connection to THREDDS
 library(thredds)
 #Downloading data

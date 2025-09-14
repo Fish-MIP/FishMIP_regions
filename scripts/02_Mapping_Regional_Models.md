@@ -41,6 +41,7 @@ models shapefile available from the THREDDS server.
 # Loading libraries
 
 ``` r
+knitr::opts_chunk$set(fig.path = "figures/")
 #Connection to THREDDS
 library(thredds)
 #Downloading data
@@ -140,12 +141,12 @@ fishmip_reg <- file.path("/rd/gem/private/shared_resources",
 fishmip_reg
 ```
 
-    ## Simple feature collection with 61 features and 3 fields
+    ## Simple feature collection with 62 features and 3 fields
     ## Geometry type: MULTIPOLYGON
     ## Dimension:     XY
     ## Bounding box:  xmin: -180 ymin: -78.74234 xmax: 180 ymax: 83.66553
     ## Geodetic CRS:  WGS 84
-    ## # A tibble: 61 × 4
+    ## # A tibble: 62 × 4
     ##    region                  models              nmbr_md                  geometry
     ##  * <chr>                   <chr>                 <int>        <MULTIPOLYGON [°]>
     ##  1 Arafura Sea             Atlantis                  1 (((129.2931 -8.981402, 1…
@@ -158,11 +159,11 @@ fishmip_reg
     ##  8 Central South Pacific   Mizer                     1 (((-168.2779 -22.09492, …
     ##  9 Chatham Rise            Atlantis, EwE, Miz…       3 (((172 -45.33333, 172 -4…
     ## 10 Christmas Island        Atlantis                  1 (((102.077 -8.652076, 10…
-    ## # ℹ 51 more rows
+    ## # ℹ 52 more rows
 
 # Plotting map
 
-Since we removed the Southern Ocean region, we have 61 polygons left.
+Since we removed the Southern Ocean region, we have 62 polygons left.
 However, we will need to apply some changes to our datasets to create
 publication ready maps.
 
@@ -224,7 +225,7 @@ reg <- fishmip_reg_rob |>
 reg
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](figures/unnamed-chunk-3-1.png)<!-- -->
 
 Our initial maps shows all FishMIP regions, but does not look great yet.
 We will use this as a guide to identify the areas where we will create
@@ -264,7 +265,7 @@ eu_box <- st_bbox(c(xmin = -751458, xmax = 3351458, ymax = 6825154,
 europe
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](figures/unnamed-chunk-4-1.png)<!-- -->
 
 ### Australia and New Zealand
 
@@ -610,7 +611,7 @@ au_nz_box <- st_union(st_bbox(c(xmin = 110, xmax = 180,
 au_nz
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](figures/unnamed-chunk-5-1.png)<!-- -->
 
 ### Southern Ocean
 
@@ -640,7 +641,7 @@ so_box <- st_bbox(c(xmin = 1800000, xmax = 8900000, ymax = -4612577,
 so
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](figures/unnamed-chunk-6-1.png)<!-- -->
 
 ### Adding boundaries of inset maps into main map
 
@@ -653,7 +654,7 @@ main <- reg+
 main
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](figures/unnamed-chunk-7-1.png)<!-- -->
 
 ### Merging main map with inset maps
 
@@ -671,7 +672,7 @@ final_map <- final_map+
 final_map
 ```
 
-![](figures/02_Mapping_Regional_Models_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](figures/unnamed-chunk-8-1.png)<!-- -->
 
 The map above may not look great in your screen, but once it is saved to
 your local machine, it will plot correctly. However, you can change the
