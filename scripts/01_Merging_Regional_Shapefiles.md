@@ -27,6 +27,10 @@ create maps or masks to extract Earth System Models (ESMs) outputs.
 # Loading R libraries
 
 ``` r
+knitr::opts_chunk$set(fig.path = "figures/")
+```
+
+``` r
 #Data manipulation
 library(dplyr)
 library(stringr)
@@ -97,7 +101,7 @@ region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
 
 ## Loading regions
 
-As of December 2023, there are 62 regional FishMIP models. We will use
+As of December 2023, there are 63 regional FishMIP models. We will use
 the boundaries for all these regions to create a single shapefile that
 includes all FishMIP regional models. Having a single file is useful to
 create maps showing all regional models easily. This file can also be
@@ -146,9 +150,9 @@ ggplot()+
   guides(fill = guide_legend(ncol = 4))
 ```
 
-![](figures/01_Merging_Regional_Shapefiles_files/figure-gfm/map-1.png)<!-- -->
+![](figures/map-1.png)<!-- -->
 
-The merged shapefile includes 62 different regions, which matches the
+The merged shapefile includes 63 different regions, which matches the
 number of regional FishMIP models. We can now save this merged file.
 
 ``` r

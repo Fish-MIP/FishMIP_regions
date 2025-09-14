@@ -14,6 +14,11 @@ In this notebook, we will use shapefiles submitted by all FishMIP regional model
   
 # Loading R libraries
 
+```{r}
+knitr::opts_chunk$set(fig.path = "figures/")
+```
+
+
 ```{r libraries, results = "hide", warnings = F, message = F}
 #Data manipulation
 library(dplyr)
