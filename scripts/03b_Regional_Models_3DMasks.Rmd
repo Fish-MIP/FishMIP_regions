@@ -15,6 +15,7 @@ In this notebook, we will show how to create a multidimensional raster mask that
 # Loading libraries
   
 ```{r libraries, warning = F, message = F}
+knitr::opts_chunk$set(fig.path = "figures/")
 #Spatial data
 library(sf)
 library(terra)

@@ -33,6 +33,7 @@ Fish-MIP project, as well as a mask in table format (i.e., data frame).
 # Loading libraries
 
 ``` r
+knitr::opts_chunk$set(fig.path = "figures/")
 #Spatial data
 library(sf)
 library(terra)
@@ -66,7 +67,7 @@ ne_countries(returnclass = "sf") |>
   theme_bw()
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](figures/unnamed-chunk-1-1.png)<!-- -->
 
 Our shapefile is plotting correctly, now we can move onto creating
 raster masks. In total, we will create four different multidimensional
@@ -191,7 +192,7 @@ plot(ras)
     ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
     ## Time or Vertical dimension.
 
-![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](figures/unnamed-chunk-6-1.png)<!-- -->
 
 # Saving raster mask keys
 
@@ -214,7 +215,7 @@ reg_keys |>
 reg_keys
 ```
 
-    ## # A tibble: 62 × 2
+    ## # A tibble: 63 × 2
     ##       id region                 
     ##    <int> <chr>                  
     ##  1     1 Arafura Sea            
@@ -227,7 +228,7 @@ reg_keys
     ##  8     8 Central South Pacific  
     ##  9     9 Chatham Rise           
     ## 10    10 Christmas Island       
-    ## # ℹ 52 more rows
+    ## # ℹ 53 more rows
 
 ## How to use raster mask
 
@@ -258,7 +259,7 @@ extract_data <- sample*east_ant
 plot(extract_data)
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](figures/unnamed-chunk-8-1.png)<!-- -->
 
 # Data frame mask
 
@@ -312,7 +313,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 27887 Columns: 4
+    ## Rows: 28004 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -332,7 +333,7 @@ extract_df |>
   geom_raster(aes(x = lon, y = lat, fill = areacello))
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](figures/unnamed-chunk-11-1.png)<!-- -->
 
 You can also apply the mask to extract all data at once.
 
@@ -343,7 +344,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 27887 Columns: 4
+    ## Rows: 28004 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -361,7 +362,7 @@ extract_df_all |>
               show.legend = F)
 ```
 
-![](figures/03b_Regional_Models_3DMasks_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](figures/unnamed-chunk-12-1.png)<!-- -->
 
 **Note:** When you use a mask, whether in raster or `csv` form, the grid
 for the mask and the data being extracted **MUST** be the same.
