@@ -29,6 +29,7 @@ the Fish-MIP project.
 # Loading libraries
 
 ``` r
+knitr::opts_chunk$set(fig.path = "figures/")
 #Spatial data
 library(sf)
 ```
@@ -98,7 +99,7 @@ ne_countries(returnclass = "sf") |>
   theme_bw()
 ```
 
-![](figures/03a_Regional_Models_2DMasks_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](figures/unnamed-chunk-1-1.png)<!-- -->
 
 The Southern Ocean regions are plotting correctly, now we can move onto
 creating raster masks. In total, we will create four different masks to
@@ -169,7 +170,7 @@ ras <- rast(list.files("/rd/gem/private/shared_resources/SouthernOceanMasks/",
 plot(ras)
 ```
 
-![](figures/03a_Regional_Models_2DMasks_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](figures/unnamed-chunk-5-1.png)<!-- -->
 
 The final mask matches the region, which is exactly what we needed. We
 are now going to save a data frame containing the name of the Southern
