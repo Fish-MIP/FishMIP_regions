@@ -3,23 +3,17 @@ Creating_multidimensional_raster_mask
 Denisse Fierro Arcos
 2023-11-27
 
-- <a href="#introduction" id="toc-introduction">Introduction</a>
-- <a href="#loading-libraries" id="toc-loading-libraries">Loading
-  libraries</a>
-- <a href="#loading-fishmip-regional-models-shapefile"
-  id="toc-loading-fishmip-regional-models-shapefile">Loading FishMIP
-  regional models shapefile</a>
-- <a href="#finding-location-of-raster-samples"
-  id="toc-finding-location-of-raster-samples">Finding location of raster
-  samples</a>
-- <a href="#plotting-mask" id="toc-plotting-mask">Plotting mask</a>
-- <a href="#saving-raster-mask-keys"
-  id="toc-saving-raster-mask-keys">Saving raster mask keys</a>
-  - <a href="#how-to-use-raster-mask" id="toc-how-to-use-raster-mask">How to
-    use raster mask</a>
-- <a href="#data-frame-mask" id="toc-data-frame-mask">Data frame mask</a>
-  - <a href="#how-to-use-data-frame-mask"
-    id="toc-how-to-use-data-frame-mask">How to use data frame mask</a>
+- [Introduction](#introduction)
+- [Loading libraries](#loading-libraries)
+- [Loading FishMIP regional models
+  shapefile](#loading-fishmip-regional-models-shapefile)
+- [Finding location of raster
+  samples](#finding-location-of-raster-samples)
+- [Plotting mask](#plotting-mask)
+- [Saving raster mask keys](#saving-raster-mask-keys)
+  - [How to use raster mask](#how-to-use-raster-mask)
+- [Data frame mask](#data-frame-mask)
+  - [How to use data frame mask](#how-to-use-data-frame-mask)
 
 ## Introduction
 
@@ -48,13 +42,14 @@ library(rnaturalearth)
 
 # Loading FishMIP regional models shapefile
 
-We will load the shapefile with all Fish-MIP regional model boundaries
+We will load the shapefile with all FishMIP regional model boundaries
 and add a unique ID identifying each region.
 
 ``` r
 #Loading shapefile
-regions <- file.path("/rd/gem/private/shared_resources/",
-                     "FishMIP_regional_models/FishMIP_regional_models.shp") |> 
+regions <- file.path(
+  "/rd/gem/private/shared_resources/FishMIP_regional_models", 
+  "FishMIP_regional_models.shp") |> 
   read_sf() |> 
   #Create a unique ID for each region
   rowid_to_column("id")
@@ -71,13 +66,12 @@ ne_countries(returnclass = "sf") |>
 
 Our shapefile is plotting correctly, now we can move onto creating
 raster masks. In total, we will create four different multidimensional
-raster masks to match all data available as forcings for Fish-MIP
-models.
+raster masks to match all data available as forcings for FishMIP models.
 
 # Finding location of raster samples
 
-We have a folder containing samples of the raster used in Fish-MIP
-models and ESMs. We will list all the files contained in that folder.
+We have a folder containing samples of the raster used in FishMIP models
+and ESMs. We will list all the files contained in that folder.
 
 ``` r
 #Directory containing sample rasters
@@ -149,48 +143,8 @@ We will plot one mask to ensure it has been correctly created.
 ``` r
 ras <- rast(list.files("/rd/gem/private/shared_resources/FishMIPMasks", 
                        "w-fractions.*nc", full.names = T))
-```
-
-    ## Warning in new_CppObject_xp(fields$.module, fields$.pointer, ...): GDAL Message
-    ## 1: dimension #0 (time) is not a Time or Vertical dimension.
-
-``` r
 plot(ras)
 ```
-
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
-    ## Warning in x@pntr$readStart(): GDAL Message 1: dimension #0 (time) is not a
-    ## Time or Vertical dimension.
 
 ![](figures/unnamed-chunk-6-1.png)<!-- -->
 
@@ -238,21 +192,16 @@ a binary mask to extract the data we need.
 ``` r
 #Load sample ESM data
 sample <- rast(str_subset(sample_rasters, "w-fractions"))
+```
 
+    ## Warning: [rast] guessed crs
+
+``` r
 #We will choose mask 7 - Central North Pacific (see keys above)
 east_ant <- ras[[7]]
 #We will replace the ID for the region for the value of 1
 east_ant[!is.na(east_ant)] = 1
-```
 
-    ## Warning in x@pntr$isnan(FALSE, opt): GDAL Message 1: dimension #0 (time) is not
-    ## a Time or Vertical dimension.
-
-    ## Warning in x@pntr$mask_raster(mask@pntr, inverse[1], maskvalues,
-    ## updatevalue[1], : GDAL Message 1: dimension #0 (time) is not a Time or Vertical
-    ## dimension.
-
-``` r
 #Multiply data and mask
 extract_data <- sample*east_ant
 #Check result
@@ -313,7 +262,7 @@ mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
   filter(region == "East Antarctica EwE")
 ```
 
-    ## Rows: 28004 Columns: 4
+    ## Rows: 28001 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
@@ -344,7 +293,7 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
-    ## Rows: 28004 Columns: 4
+    ## Rows: 28001 Columns: 4
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr (1): region
