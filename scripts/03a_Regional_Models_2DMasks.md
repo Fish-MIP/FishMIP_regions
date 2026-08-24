@@ -3,19 +3,14 @@ Creating_raster_mask
 Denisse Fierro Arcos
 2023-11-06
 
-- <a href="#introduction" id="toc-introduction">Introduction</a>
-- <a href="#loading-libraries" id="toc-loading-libraries">Loading
-  libraries</a>
-- <a href="#loading-southern-ocean-shapefile"
-  id="toc-loading-southern-ocean-shapefile">Loading Southern Ocean
-  shapefile</a>
-- <a href="#finding-location-of-raster-samples"
-  id="toc-finding-location-of-raster-samples">Finding location of raster
-  samples</a>
-- <a href="#plotting-mask" id="toc-plotting-mask">Plotting mask</a>
-  - <a href="#creating-a-simple-2d-mask-for-all-fishmip-regions"
-    id="toc-creating-a-simple-2d-mask-for-all-fishmip-regions">Creating a
-    simple 2D mask for all FishMIP regions</a>
+- [Introduction](#introduction)
+- [Loading libraries](#loading-libraries)
+- [Loading Southern Ocean shapefile](#loading-southern-ocean-shapefile)
+- [Finding location of raster
+  samples](#finding-location-of-raster-samples)
+- [Plotting mask](#plotting-mask)
+  - [Creating a simple 2D mask for all FishMIP
+    regions](#creating-a-simple-2d-mask-for-all-fishmip-regions)
 
 ## Introduction
 
@@ -24,7 +19,7 @@ used to extract data from Earth System Models. Here, we will use the
 shapefile for the Southern Ocean MICE regional model. This regional
 model contains some internal boundaries that do not overlap. We will
 create two-dimensional masks that will match the various grids used in
-the Fish-MIP project.
+the FishMIP project.
 
 # Loading libraries
 
@@ -34,13 +29,22 @@ knitr::opts_chunk$set(fig.path = "figures/")
 library(sf)
 ```
 
-    ## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE
+    ## Linking to GEOS 3.12.2, GDAL 3.11.4, PROJ 9.4.1; sf_use_s2() is TRUE
 
 ``` r
 library(terra)
 ```
 
-    ## terra 1.8.15
+    ## terra 1.9.27
+
+    ## WARNING: different compile-time and run-time versions of GEOS
+
+    ## Compiled with:3.12.1-CAPI-1.18.1
+
+    ##  Running with:3.12.2-CAPI-1.18.2
+
+    ## 
+    ## You should reinstall package 'terra'
 
 ``` r
 #Manipulating and plotting data
@@ -48,11 +52,11 @@ library(tidyverse)
 ```
 
     ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.4     ✔ readr     2.1.4
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-    ## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-    ## ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-    ## ✔ purrr     1.0.2
+    ## ✔ dplyr     1.2.1     ✔ readr     2.2.0
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+    ## ✔ purrr     1.2.2
 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ tidyr::extract() masks terra::extract()
@@ -74,10 +78,10 @@ are two polygons for a region, they will be classified as that region.
 
 ``` r
 #Loading shapefile
-southern_ocean <- file.path("/rd/gem/private/shared_resources/",
-                            "Shapefiles_Regions/Southern-Ocean_MICE",
-                            "SupportInfo/SouthernOcean_MICE.shp") |> 
-                            read_sf() |> 
+southern_ocean <- file.path(
+  "/rd/gem/private/shared_resources/Shapefiles_Regions/Southern-Ocean_MICE",
+  "SupportInfo/SouthernOcean_MICE.shp") |> 
+  read_sf() |> 
   #Uniting region and band columns
   unite("region", region, band)
 
@@ -189,9 +193,9 @@ same grid as the mask.
 ## Creating a simple 2D mask for all FishMIP regions
 
 ``` r
-fishmip_reg <- read_sf(file.path("/rd/gem/private/shared_resources", 
-                                 "FishMIP_regional_models", 
-                                 "FishMIP_regional_models.shp"))
+fishmip_reg <- read_sf(
+  file.path("/rd/gem/private/shared_resources/FishMIP_regional_models", 
+            "FishMIP_regional_models.shp"))
 
 out_folder <- file.path("/rd/gem/private/shared_resources/FishMIPMasks",
                         "merged_regional_fishmip")
@@ -203,3 +207,5 @@ for(ras in sample_rasters){
   shp_to_raster(fishmip_reg, ras, 1, "fishMIP_regional_merged", out_folder)
 }
 ```
+
+    ## Warning: [rast] guessed crs
