@@ -47,18 +47,18 @@ and add a unique ID identifying each region.
 
 ``` r
 #Loading shapefile
-regions <- file.path(
+regions <- read_sf(file.path(
   "/rd/gem/private/shared_resources/FishMIP_regional_models", 
-  "FishMIP_regional_models.shp") |> 
-  read_sf() |> 
+  "FishMIP_regional_models.shp")) |> 
   #Create a unique ID for each region
   rowid_to_column("id")
 
 #Checking result
 ne_countries(returnclass = "sf") |> 
-  ggplot()+
-  geom_sf()+
-  geom_sf(inherit.aes = F, data = regions, aes(fill = region), alpha = 0.7)+
+  ggplot() +
+  geom_sf() +
+  geom_sf(inherit.aes = FALSE, data = regions, aes(fill = region), 
+          alpha = 0.7) +
   theme_bw()
 ```
 
@@ -78,8 +78,8 @@ and ESMs. We will list all the files contained in that folder.
 samples_dir <- "/rd/gem/private/shared_resources/grid_cell_area_ESMs"
 
 #Getting a list of sample rasters in the isimip folders
-sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = T,
-                             recursive = T) |> 
+sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = TRUE,
+                             recursive = TRUE) |> 
   str_subset("isimip")
 
 #Checking results
@@ -113,7 +113,7 @@ exists, if not, we will create one.
 #Ensure output folder exists
 out_folder <- "/rd/gem/private/shared_resources/FishMIPMasks"
 if(!dir.exists(out_folder)){
-  dir.create(out_folder, recursive = T)}
+  dir.create(out_folder, recursive = TRUE)}
 
 #Storing each region inside the regions shapefile as an element of a list
 region_list <- split(regions, 1:nrow(regions))
@@ -127,8 +127,7 @@ for(ras in sample_rasters){
   stack_list <- map(region_list, shp_to_raster, ras)
   stack <- rast(stack_list)
   #Create name for mask to be saved from original raster sample
-  file_out <- str_replace(basename(ras), 
-                          "global", "fishMIP_regional_mask")
+  file_out <- str_replace(basename(ras), "global", "fishMIP_regional_mask")
   file_out <- file.path(out_folder, file_out)
   #Save multi dimensional raster mask
   writeCDF(stack, file_out, overwrite = T, varname = "region",
@@ -142,7 +141,7 @@ We will plot one mask to ensure it has been correctly created.
 
 ``` r
 ras <- rast(list.files("/rd/gem/private/shared_resources/FishMIPMasks", 
-                       "w-fractions.*nc", full.names = T))
+                       "w-fractions.*nc", full.names = TRUE))
 plot(ras)
 ```
 
@@ -198,12 +197,12 @@ sample <- rast(str_subset(sample_rasters, "w-fractions"))
 
 ``` r
 #We will choose mask 7 - Central North Pacific (see keys above)
-east_ant <- ras[[7]]
+central_north_pacific <- ras[[7]]
 #We will replace the ID for the region for the value of 1
-east_ant[!is.na(east_ant)] = 1
+central_north_pacific[!is.na(central_north_pacific)] = 1
 
 #Multiply data and mask
-extract_data <- sample*east_ant
+extract_data <- sample*central_north_pacific
 #Check result
 plot(extract_data)
 ```
@@ -219,10 +218,10 @@ masks to `csv` masks.
 ``` r
 mask_df <- function(raster_path, keys){
   df <- rast(raster_path) |> 
-    as.data.frame(xy = T) |> 
+    as.data.frame(xy = TRUE) |> 
     rename("lon" = "x", "lat" = "y") |> 
     pivot_longer(starts_with("region"), names_to = "region", values_to = "id", 
-                 values_drop_na = T) |>
+                 values_drop_na = TRUE) |>
     select(!region) |> 
     left_join(keys, by = "id")
   
@@ -236,11 +235,11 @@ mask_df <- function(raster_path, keys){
 Now we will apply this function to all raster masks.
 
 ``` r
-raster_masks <- list.files(out_folder, pattern = ".nc$", full.names = T)
+raster_masks <- list.files(out_folder, pattern = ".nc$", full.names = TRUE)
 
 #Applying function creating csv masks
-for(ras in raster_masks){
-  mask_df(ras, reg_keys)}
+raster_masks |> 
+  map(\(x) mask_df(x, reg_keys))
 ```
 
 ## How to use data frame mask
@@ -252,12 +251,12 @@ extract the data we need.
 #Load sample ESM data
 sample_df <- sample |> 
   #Transforming to data frame
-  as.data.frame(xy = T) |> 
+  as.data.frame(xy = TRUE) |> 
   rename("lon" = "x", "lat" = "y")
 
 #Load raster mask
 mask_df <- read_csv(list.files(out_folder, "w-fractions.*csv",
-                               full.names = T)) |> 
+                               full.names = TRUE)) |> 
   #We will choose East Antarctica - EwE
   filter(region == "East Antarctica EwE")
 ```
@@ -278,7 +277,7 @@ extract_df <- mask_df |>
 
 #Plotting result
 extract_df |> 
-  ggplot()+
+  ggplot() +
   geom_raster(aes(x = lon, y = lat, fill = areacello))
 ```
 
@@ -289,7 +288,7 @@ You can also apply the mask to extract all data at once.
 ``` r
 #Apply mask to ESM data
 extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
-                               full.names = T)) |> 
+                                      full.names = TRUE)) |> 
   left_join(sample_df, by = c("lon", "lat"))
 ```
 
@@ -305,10 +304,10 @@ extract_df_all <- read_csv(list.files(out_folder, "w-fractions.*csv",
 ``` r
 #Plotting result
 extract_df_all |> 
-  ggplot()+
+  ggplot() +
   #Color by region, transparency by area
-  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello), 
-              show.legend = F)
+  geom_raster(aes(x = lon, y = lat, fill = region, alpha = areacello),
+              show.legend = FALSE)
 ```
 
 ![](figures/unnamed-chunk-12-1.png)<!-- -->
