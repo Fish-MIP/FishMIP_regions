@@ -107,7 +107,7 @@ curl_download(url, destfile = "FishMIP_regions.zip")
 out_folder <- "../outputs"
 #If folder does not exist, create one
 if(!dir.exists(out_folder)){
-  dir.create(out_folder, recursive = T)}
+  dir.create(out_folder, recursive = TRUE)}
 unzip("FishMIP_regions.zip", exdir = out_folder)
 
 #Delete zip folder
@@ -123,10 +123,9 @@ Now that we have downloaded the merged shapefiles, we can load it to `R`
 and create a map. We will exclude the Southern Ocean region.
 
 ``` r
-fishmip_reg <- file.path(
+fishmip_reg <- read_sf(file.path(
   "/rd/gem/private/shared_resources/FishMIP_regional_models", 
-  "FishMIP_regional_models.shp") |> 
-  read_sf() |> 
+  "FishMIP_regional_models.shp")) |> 
   filter(region != "Southern Ocean")
 
 #Checking results
@@ -199,17 +198,17 @@ map.
 #Plotting 
 reg <- fishmip_reg_rob |> 
   #Plotting
-  ggplot()+
+  ggplot() +
   #Using colours of our tailored made colourmap
-  geom_sf(aes(fill = region), alpha = 0.5)+
-  geom_sf(data = world, fill = "#f9f9f5", show.legend = F)+
-  theme_bw()+
+  geom_sf(aes(fill = region), alpha = 0.5) +
+  geom_sf(data = world, fill = "#f9f9f5", show.legend = FALSE) +
+  theme_bw() +
   #Move legend to bottom
   theme(legend.position = "bottom", legend.title = element_blank(),
         legend.margin = margin(0, 0, 0, 0),
         legend.box.margin = margin(0, 0, 0, 0),
         legend.text = element_text(margin = margin(r = 5)),
-        panel.border = element_rect(colour = NA))+
+        panel.border = element_rect(colour = NA)) +
   #Split legend into four columns
   guides(fill = guide_legend(ncol = 4))
 
@@ -231,18 +230,18 @@ We will use the base map above to create these smaller maps.
 ### Europe
 
 ``` r
-europe <- reg+
+europe <- reg +
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.6))+
+  geom_sf(inherit.aes = TRUE, aes(alpha = 0.6)) +
   #Remove background
-  theme_bw()+
+  theme_bw() +
   #Remove legend
-  theme(legend.position = "none")+
+  theme(legend.position = "none") +
   #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
+  geom_sf(data = world, fill = "#f9f9f5") +
   #Focus on Europe. Note that we use coordinates in meters because data is 
   #reprojected
-  lims(x = c(-741458, 3251458), y = c(3256289, 6725154))+
+  lims(x = c(-741458, 3251458), y = c(3256289, 6725154)) +
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#0077bb", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
@@ -268,13 +267,14 @@ line, we will show this area in an unprojected map.
 au_nz <- fishmip_reg |>
   #Switching to 0-360 degrees longitude
   st_shift_longitude() |>
-  ggplot()+
+  ggplot() +
   #We will increase transparency to see overlapping areas better
-  geom_sf(aes(fill = region), alpha = 0.6)+
+  geom_sf(aes(fill = region), alpha = 0.6) +
   #Add world base map
-  geom_sf(inherit.aes = F, data = world, fill = "#f9f9f5", show.legend = F)+
+  geom_sf(inherit.aes = FALSE, data = world, fill = "#f9f9f5", 
+          show.legend = FALSE) +
   #Focus on Australia and New Zealand
-  lims(x = c(110, 200), y = c(-50, -10))+
+  lims(x = c(110, 200), y = c(-50, -10)) +
   #Remove background
   theme_bw()+
   #Remove legend
@@ -287,352 +287,17 @@ Tas <- fishmip_reg |>
   mutate(fill = "#CAB2D6")
 
 #Plot Bass Strait over the original AU/NZ map
-au_nz <- au_nz+
-  geom_sf(inherit.aes = F, data = Tas, aes(fill = region), alpha = 0.5)
+au_nz <- au_nz +
+  geom_sf(inherit.aes = FALSE, data = Tas, aes(fill = region), alpha = 0.5) +
   #Remove background
-  theme_bw()+
+  theme_bw() +
   #Remove legend
   theme(legend.position = "none")+
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#999933", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, unit = "cm"))
-```
 
-    ## <theme> List of 144
-    ##  $ line                            : <ggplot2::element_line>
-    ##   ..@ colour       : chr "black"
-    ##   ..@ linewidth    : num 0.5
-    ##   ..@ linetype     : num 1
-    ##   ..@ lineend      : chr "butt"
-    ##   ..@ linejoin     : chr "round"
-    ##   ..@ arrow        : logi FALSE
-    ##   ..@ arrow.fill   : chr "black"
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ rect                            : <ggplot2::element_rect>
-    ##   ..@ fill         : chr "white"
-    ##   ..@ colour       : chr "black"
-    ##   ..@ linewidth    : num 0.5
-    ##   ..@ linetype     : num 1
-    ##   ..@ linejoin     : chr "round"
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ text                            : <ggplot2::element_text>
-    ##   ..@ family       : chr ""
-    ##   ..@ face         : chr "plain"
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : chr "black"
-    ##   ..@ size         : num 11
-    ##   ..@ hjust        : num 0.5
-    ##   ..@ vjust        : num 0.5
-    ##   ..@ angle        : num 0
-    ##   ..@ lineheight   : num 0.9
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 0 0 0
-    ##   ..@ debug        : logi FALSE
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ title                           : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : NULL
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ point                           : <ggplot2::element_point>
-    ##   ..@ colour       : chr "black"
-    ##   ..@ shape        : num 19
-    ##   ..@ size         : num 1.5
-    ##   ..@ fill         : chr "white"
-    ##   ..@ stroke       : num 0.5
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ polygon                         : <ggplot2::element_polygon>
-    ##   ..@ fill         : chr "white"
-    ##   ..@ colour       : chr "black"
-    ##   ..@ linewidth    : num 0.5
-    ##   ..@ linetype     : num 1
-    ##   ..@ linejoin     : chr "round"
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ geom                            : <ggplot2::element_geom>
-    ##   ..@ ink        : chr "black"
-    ##   ..@ paper      : chr "white"
-    ##   ..@ accent     : chr "#3366FF"
-    ##   ..@ linewidth  : num 0.5
-    ##   ..@ borderwidth: num 0.5
-    ##   ..@ linetype   : int 1
-    ##   ..@ bordertype : int 1
-    ##   ..@ family     : chr ""
-    ##   ..@ fontsize   : num 3.87
-    ##   ..@ pointsize  : num 1.5
-    ##   ..@ pointshape : num 19
-    ##   ..@ colour     : NULL
-    ##   ..@ fill       : NULL
-    ##  $ spacing                         : 'simpleUnit' num 5.5points
-    ##   ..- attr(*, "unit")= int 8
-    ##  $ margins                         : <ggplot2::margin> num [1:4] 5.5 5.5 5.5 5.5
-    ##  $ aspect.ratio                    : NULL
-    ##  $ axis.title                      : NULL
-    ##  $ axis.title.x                    : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 1
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 2.75 0 0 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.title.x.top                : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 0
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 0 2.75 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.title.x.bottom             : NULL
-    ##  $ axis.title.y                    : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 1
-    ##   ..@ angle        : num 90
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 2.75 0 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.title.y.left               : NULL
-    ##  $ axis.title.y.right              : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 1
-    ##   ..@ angle        : num -90
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 0 0 2.75
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.text                       : <ggplot2::element_blank>
-    ##  $ axis.text.x                     : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 1
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 2.2 0 0 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.text.x.top                 : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : num 0
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 0 2.2 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.text.x.bottom              : NULL
-    ##  $ axis.text.y                     : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : num 1
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 2.2 0 0
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.text.y.left                : NULL
-    ##  $ axis.text.y.right               : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : num 0
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 0 0 2.2
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.text.theta                 : NULL
-    ##  $ axis.text.r                     : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : num 0.5
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : <ggplot2::margin> num [1:4] 0 2.2 0 2.2
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ axis.ticks                      : <ggplot2::element_blank>
-    ##  $ axis.ticks.x                    : NULL
-    ##  $ axis.ticks.x.top                : NULL
-    ##  $ axis.ticks.x.bottom             : NULL
-    ##  $ axis.ticks.y                    : NULL
-    ##  $ axis.ticks.y.left               : NULL
-    ##  $ axis.ticks.y.right              : NULL
-    ##  $ axis.ticks.theta                : NULL
-    ##  $ axis.ticks.r                    : NULL
-    ##  $ axis.minor.ticks.x.top          : NULL
-    ##  $ axis.minor.ticks.x.bottom       : NULL
-    ##  $ axis.minor.ticks.y.left         : NULL
-    ##  $ axis.minor.ticks.y.right        : NULL
-    ##  $ axis.minor.ticks.theta          : NULL
-    ##  $ axis.minor.ticks.r              : NULL
-    ##  $ axis.ticks.length               : 'rel' num 0.5
-    ##  $ axis.ticks.length.x             : NULL
-    ##  $ axis.ticks.length.x.top         : NULL
-    ##  $ axis.ticks.length.x.bottom      : NULL
-    ##  $ axis.ticks.length.y             : NULL
-    ##  $ axis.ticks.length.y.left        : NULL
-    ##  $ axis.ticks.length.y.right       : NULL
-    ##  $ axis.ticks.length.theta         : NULL
-    ##  $ axis.ticks.length.r             : NULL
-    ##  $ axis.minor.ticks.length         : 'rel' num 0.75
-    ##  $ axis.minor.ticks.length.x       : NULL
-    ##  $ axis.minor.ticks.length.x.top   : NULL
-    ##  $ axis.minor.ticks.length.x.bottom: NULL
-    ##  $ axis.minor.ticks.length.y       : NULL
-    ##  $ axis.minor.ticks.length.y.left  : NULL
-    ##  $ axis.minor.ticks.length.y.right : NULL
-    ##  $ axis.minor.ticks.length.theta   : NULL
-    ##  $ axis.minor.ticks.length.r       : NULL
-    ##  $ axis.line                       : <ggplot2::element_blank>
-    ##  $ axis.line.x                     : NULL
-    ##  $ axis.line.x.top                 : NULL
-    ##  $ axis.line.x.bottom              : NULL
-    ##  $ axis.line.y                     : NULL
-    ##  $ axis.line.y.left                : NULL
-    ##  $ axis.line.y.right               : NULL
-    ##  $ axis.line.theta                 : NULL
-    ##  $ axis.line.r                     : NULL
-    ##  $ legend.background               : <ggplot2::element_rect>
-    ##   ..@ fill         : NULL
-    ##   ..@ colour       : logi NA
-    ##   ..@ linewidth    : NULL
-    ##   ..@ linetype     : NULL
-    ##   ..@ linejoin     : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ legend.margin                   : NULL
-    ##  $ legend.spacing                  : 'rel' num 2
-    ##  $ legend.spacing.x                : NULL
-    ##  $ legend.spacing.y                : NULL
-    ##  $ legend.key                      : NULL
-    ##  $ legend.key.size                 : 'simpleUnit' num 1.2lines
-    ##   ..- attr(*, "unit")= int 3
-    ##  $ legend.key.height               : NULL
-    ##  $ legend.key.width                : NULL
-    ##  $ legend.key.spacing              : NULL
-    ##  $ legend.key.spacing.x            : NULL
-    ##  $ legend.key.spacing.y            : NULL
-    ##  $ legend.key.justification        : NULL
-    ##  $ legend.frame                    : NULL
-    ##  $ legend.ticks                    : NULL
-    ##  $ legend.ticks.length             : 'rel' num 0.2
-    ##  $ legend.axis.line                : NULL
-    ##  $ legend.text                     : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : 'rel' num 0.8
-    ##   ..@ hjust        : NULL
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : NULL
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ legend.text.position            : NULL
-    ##  $ legend.title                    : <ggplot2::element_text>
-    ##   ..@ family       : NULL
-    ##   ..@ face         : NULL
-    ##   ..@ italic       : chr NA
-    ##   ..@ fontweight   : num NA
-    ##   ..@ fontwidth    : num NA
-    ##   ..@ colour       : NULL
-    ##   ..@ size         : NULL
-    ##   ..@ hjust        : num 0
-    ##   ..@ vjust        : NULL
-    ##   ..@ angle        : NULL
-    ##   ..@ lineheight   : NULL
-    ##   ..@ margin       : NULL
-    ##   ..@ debug        : NULL
-    ##   ..@ inherit.blank: logi TRUE
-    ##  $ legend.title.position           : NULL
-    ##  $ legend.position                 : chr "none"
-    ##  $ legend.position.inside          : NULL
-    ##  $ legend.direction                : NULL
-    ##  $ legend.byrow                    : NULL
-    ##  $ legend.justification            : chr "center"
-    ##  $ legend.justification.top        : NULL
-    ##  $ legend.justification.bottom     : NULL
-    ##  $ legend.justification.left       : NULL
-    ##  $ legend.justification.right      : NULL
-    ##  $ legend.justification.inside     : NULL
-    ##   [list output truncated]
-    ##  @ complete: logi TRUE
-    ##  @ validate: logi TRUE
-
-``` r
 #Create a shapefile with map limits
 au_nz_box <- st_union(st_bbox(c(xmin = 110, xmax = 180, 
                                 ymax = -10, ymin = -50), crs = 4326) |> 
@@ -652,17 +317,17 @@ au_nz
 ### Southern Ocean
 
 ``` r
-so <- reg+
+so <- reg +
   #We will increase transparency to see overlapping areas better
-  geom_sf(inherit.aes = T, aes(alpha = 0.5))+
+  geom_sf(inherit.aes = TRUE, aes(alpha = 0.5)) +
   #Remove background
-  theme_bw()+
+  theme_bw() +
   #Remove legend
-  theme(legend.position = "none")+
+  theme(legend.position = "none") +
   #Add world base map
-  geom_sf(data = world, fill = "#f9f9f5")+
+  geom_sf(data = world, fill = "#f9f9f5") +
   #Focus on Australia and New Zealand
-  lims(x = c(1900000, 8800000), y = c(-7525154, -4712577))+
+  lims(x = c(1900000, 8800000), y = c(-7525154, -4712577)) +
   #Add a border to map so it is easily identifiable
   theme(panel.border = element_rect(colour = "#332288", linewidth = 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
@@ -682,9 +347,9 @@ so
 ### Adding boundaries of inset maps into main map
 
 ``` r
-main <- reg+
-  geom_sf(data = eu_box, color = "#0077bb", fill = NA, linewidth = 0.5)+
-  geom_sf(data = au_nz_box, color = "#999933", fill = NA, linewidth = 0.5)+
+main <- reg +
+  geom_sf(data = eu_box, color = "#0077bb", fill = NA, linewidth = 0.5) +
+  geom_sf(data = au_nz_box, color = "#999933", fill = NA, linewidth = 0.5) +
   geom_sf(data = so_box, color = "#332288", fill = NA, linewidth = 0.5)
 
 main
@@ -696,12 +361,12 @@ main
 
 ``` r
 #Merging main map and insets
-final_map <- ggdraw(main)+
-  draw_plot(au_nz, x = .805, y = 0.675, width = 0.185, height = 0.3)+
-  draw_plot(so, x = .815, y = 0.38, width = 0.175, height = 0.30)+
+final_map <- ggdraw(main) +
+  draw_plot(au_nz, x = .805, y = 0.675, width = 0.185, height = 0.3) +
+  draw_plot(so, x = .815, y = 0.38, width = 0.175, height = 0.30) +
   draw_plot(europe, x = .725, y = 0.04, width = 0.3, height = 0.3)
 
-final_map <- final_map+
+final_map <- final_map +
   theme(plot.margin = margin(l = -5, unit = "cm"))
 
 #Checking final result
