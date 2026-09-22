@@ -19,7 +19,7 @@ knitr::opts_chunk$set(fig.path = "figures/")
 ```
 
 
-```{r libraries, results = "hide", warnings = F, message = F}
+```{r libraries, results = "hide", warnings = FALSE, message = FALSE}
 #Data manipulation
 library(dplyr)
 library(stringr)
@@ -43,13 +43,13 @@ The name of the folders containing regional shapefiles contain the ecosystem mod
   
 ```{r}
 #Shapefile folder
-shp_reg <- "/rd/gem/private/shared_resources/Shapefiles_Regions/"
+shp_reg <- "/rd/gem/private/shared_resources/Shapefiles_Regions"
 
 #Getting name of folders containing regional models
-reg <- list.dirs(shp_reg, recursive = F, full.names = F)
+reg <- list.dirs(shp_reg, recursive = FALSE, full.names = FALSE)
 
 #Creating a table with ecosystem models available per region
-reg_info <- str_split(reg, "_", simplify = T) |>
+reg_info <- str_split(reg, "_", simplify = TRUE) |>
   data.frame() |> 
   #Renaming columns
   rename(region = X1, model_all = X2) |> 
@@ -64,7 +64,7 @@ reg_info <- str_split(reg, "_", simplify = T) |>
   #Change name of Hawaiian region
   mutate(region = case_when(str_detect(region, "Hawaii based") ~ 
                               "Hawai'i based Longline", 
-                            T ~ region))
+                            TRUE ~ region))
 ```
   
 ## Getting list of LME names from directory paths
@@ -72,10 +72,10 @@ reg_info <- str_split(reg, "_", simplify = T) |>
 ```{r shapefiles_dirs}
 #Getting a list of shapefiles in the folder containing the regional model 
 #boundaries
-region_paths <- list.files(shp_reg, pattern = ".shp$", recursive = T, 
-                           full.names = T)
-#Remove any shapefiles included in "Support Info" folders
-region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
+region_paths <- list.files(shp_reg, pattern = ".shp$", recursive = TRUE, 
+                           full.names = TRUE) |> 
+  #Remove any shapefiles included in "Support Info" folders
+  str_subset("SupportInfo", negate = TRUE)
 ```
   
 ## Loading regions
@@ -113,7 +113,7 @@ world <- ne_countries(returnclass = "sf")
 #Plotting regions and map of the world
 ggplot()+
   geom_sf(data = world)+
-  geom_sf(data = regions, aes(fill = region, alpha = 0.5), show.legend = F)+
+  geom_sf(data = regions, aes(fill = region, alpha = 0.5), show.legend = FALSE)+
   theme_bw()+
   theme(legend.position = "bottom", legend.title = element_blank())+
   guides(fill = guide_legend(ncol = 4))
@@ -121,7 +121,7 @@ ggplot()+
   
 The merged shapefile includes `r nrow(regions)` different regions, which matches the number of regional FishMIP models. We can now save this merged file.  
   
-```{r shp_save, eval = F}
+```{r shp_save, eval = FALSE}
 #Location of folder for outputs
 out_folder <- "/rd/gem/private/shared_resources/FishMIP_regional_models"
 #If folder does not exist, create one
@@ -129,7 +129,7 @@ if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
 regions |> 
-  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"), append = F)
+  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"), append = FALSE)
 ```
   
 Remember, the final shapefile is also available in the [FishMIP THREDDS server](http://portal.sf.utas.edu.au/thredds/catalog/gem/fishmip/FishMIP_regions/catalog.html).  

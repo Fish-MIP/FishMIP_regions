@@ -3,20 +3,15 @@ Merging FishMIP Regional Shapefiles
 Denisse Fierro Arcos
 2023-10-31
 
-- <a href="#introduction" id="toc-introduction">Introduction</a>
-- <a href="#loading-r-libraries" id="toc-loading-r-libraries">Loading R
-  libraries</a>
-- <a href="#loading-regional-shapefiles"
-  id="toc-loading-regional-shapefiles">Loading regional shapefiles</a>
-  - <a href="#getting-list-of-directories"
-    id="toc-getting-list-of-directories">Getting list of directories</a>
-  - <a href="#getting-list-of-lme-names-from-directory-paths"
-    id="toc-getting-list-of-lme-names-from-directory-paths">Getting list of
-    LME names from directory paths</a>
-  - <a href="#loading-regions" id="toc-loading-regions">Loading regions</a>
-  - <a href="#plotting-merged-regions-in-a-map"
-    id="toc-plotting-merged-regions-in-a-map">Plotting merged regions in a
-    map</a>
+- [Introduction](#introduction)
+- [Loading R libraries](#loading-r-libraries)
+- [Loading regional shapefiles](#loading-regional-shapefiles)
+  - [Getting list of directories](#getting-list-of-directories)
+  - [Getting list of LME names from directory
+    paths](#getting-list-of-lme-names-from-directory-paths)
+  - [Loading regions](#loading-regions)
+  - [Plotting merged regions in a
+    map](#plotting-merged-regions-in-a-map)
 
 # Introduction
 
@@ -64,13 +59,13 @@ models shapefile.
 
 ``` r
 #Shapefile folder
-shp_reg <- "/rd/gem/private/shared_resources/Shapefiles_Regions/"
+shp_reg <- "/rd/gem/private/shared_resources/Shapefiles_Regions"
 
 #Getting name of folders containing regional models
-reg <- list.dirs(shp_reg, recursive = F, full.names = F)
+reg <- list.dirs(shp_reg, recursive = FALSE, full.names = FALSE)
 
 #Creating a table with ecosystem models available per region
-reg_info <- str_split(reg, "_", simplify = T) |>
+reg_info <- str_split(reg, "_", simplify = TRUE) |>
   data.frame() |> 
   #Renaming columns
   rename(region = X1, model_all = X2) |> 
@@ -85,7 +80,7 @@ reg_info <- str_split(reg, "_", simplify = T) |>
   #Change name of Hawaiian region
   mutate(region = case_when(str_detect(region, "Hawaii based") ~ 
                               "Hawai'i based Longline", 
-                            T ~ region))
+                            TRUE ~ region))
 ```
 
 ## Getting list of LME names from directory paths
@@ -93,10 +88,10 @@ reg_info <- str_split(reg, "_", simplify = T) |>
 ``` r
 #Getting a list of shapefiles in the folder containing the regional model 
 #boundaries
-region_paths <- list.files(shp_reg, pattern = ".shp$", recursive = T, 
-                           full.names = T)
-#Remove any shapefiles included in "Support Info" folders
-region_paths <- region_paths[!str_detect(region_paths, "SupportInfo")]
+region_paths <- list.files(shp_reg, pattern = ".shp$", recursive = TRUE, 
+                           full.names = TRUE) |> 
+  #Remove any shapefiles included in "Support Info" folders
+  str_subset("SupportInfo", negate = TRUE)
 ```
 
 ## Loading regions
@@ -144,7 +139,7 @@ world <- ne_countries(returnclass = "sf")
 #Plotting regions and map of the world
 ggplot()+
   geom_sf(data = world)+
-  geom_sf(data = regions, aes(fill = region, alpha = 0.5), show.legend = F)+
+  geom_sf(data = regions, aes(fill = region, alpha = 0.5), show.legend = FALSE)+
   theme_bw()+
   theme(legend.position = "bottom", legend.title = element_blank())+
   guides(fill = guide_legend(ncol = 4))
@@ -163,7 +158,7 @@ if(!dir.exists(out_folder)){
   dir.create(out_folder, recursive = T)}
 
 regions |> 
-  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"), append = F)
+  write_sf(file.path(out_folder, "FishMIP_regional_models.shp"), append = FALSE)
 ```
 
 Remember, the final shapefile is also available in the [FishMIP THREDDS
