@@ -78,10 +78,9 @@ are two polygons for a region, they will be classified as that region.
 
 ``` r
 #Loading shapefile
-southern_ocean <- file.path(
+southern_ocean <- read_sf(file.path(
   "/rd/gem/private/shared_resources/Shapefiles_Regions/Southern-Ocean_MICE",
-  "SupportInfo/SouthernOcean_MICE.shp") |> 
-  read_sf() |> 
+  "SupportInfo/SouthernOcean_MICE.shp")) |> 
   #Uniting region and band columns
   unite("region", region, band)
 
@@ -98,7 +97,7 @@ southern_ocean <- southern_ocean |>
 ne_countries(returnclass = "sf") |> 
   ggplot()+
   geom_sf()+
-  geom_sf(inherit.aes = F, data = southern_ocean, aes(fill = region), 
+  geom_sf(inherit.aes = FALSE, data = southern_ocean, aes(fill = region), 
           alpha = 0.7)+
   theme_bw()
 ```
@@ -119,8 +118,8 @@ models and ESMs. We will list all the files contained in that folder.
 samples_dir <- "/rd/gem/private/shared_resources/grid_cell_area_ESMs"
 
 #Getting a list of sample rasters in the isimip folders
-sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = T,
-                             recursive = T) |> 
+sample_rasters <- list.files(samples_dir, pattern = ".nc$", full.names = TRUE,
+                             recursive = TRUE) |> 
   str_subset("isimip")
 
 #Checking results
@@ -146,7 +145,8 @@ shp_to_raster <- function(shp, raster_path, field, name_sufix, out_folder){
   #Create name for mask to be saved from original raster sample
   file_out <- str_replace(basename(raster_path), "global_fixed", name_sufix)
   file_out <- file.path(out_folder, file_out)
-  writeCDF(shp_rast, file_out, overwrite = T, varname = "region", missval = NA)
+  writeCDF(shp_rast, file_out, overwrite = TRUE, varname = "region", 
+           missval = NA)
 }
 ```
 
@@ -156,21 +156,66 @@ Applying function to all raster samples.
 #Ensure output folder exists
 out_folder <- "/rd/gem/private/shared_resources/SouthernOceanMasks"
 if(!dir.exists(out_folder)){
-  dir.create(out_folder, recursive = T)}
+  dir.create(out_folder, recursive = TRUE)}
 
 #Applying function creating masks
-for(ras in sample_rasters){
-  shp_to_raster(southern_ocean, ras, "id", "Southern_Ocean_mask", out_folder)
-}
+sample_rasters |> 
+  map(\(x) shp_to_raster(southern_ocean, x, "id", "Southern_Ocean_mask", 
+                         out_folder))
 ```
+
+    ## Warning: [rast] guessed crs
+
+    ## [[1]]
+    ## class       : SpatRaster
+    ## size        : 720, 1440, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (1440, 720}
+    ## resolution  : 0.25, 0.25  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-mom6-cobalt2_areacello_15arcmin_Southern_Ocean_mask.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[2]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-mom6-cobalt2_areacello_60arcmin_Southern_Ocean_mask.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[3]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-esm4_areacello_w-fractions_60arcmin_Southern_Ocean_mask.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[4]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : ipsl-cm6a-lr_areacello_wo-fractions_60arcmin_Southern_Ocean_mask.nc
+    ## varname     : region
+    ## name        : region
 
 # Plotting mask
 
 We will plot one mask to ensure it has been correctly created.
 
 ``` r
-ras <- rast(list.files("/rd/gem/private/shared_resources/SouthernOceanMasks/", 
-                       "w-fractions", full.names = T))
+ras <- rast(list.files(out_folder, "w-fractions", full.names = TRUE))
 plot(ras)
 ```
 
@@ -200,12 +245,56 @@ fishmip_reg <- read_sf(
 out_folder <- file.path("/rd/gem/private/shared_resources/FishMIPMasks",
                         "merged_regional_fishmip")
 if(!dir.exists(out_folder)){
-  dir.create(out_folder, recursive = T)}
+  dir.create(out_folder, recursive = TRUE)}
 
 #Applying function creating masks
-for(ras in sample_rasters){
-  shp_to_raster(fishmip_reg, ras, 1, "fishMIP_regional_merged", out_folder)
-}
+sample_rasters |>
+  map(\(x) shp_to_raster(fishmip_reg, x, 1, "fishMIP_regional_merged", 
+                         out_folder))
 ```
 
     ## Warning: [rast] guessed crs
+
+    ## [[1]]
+    ## class       : SpatRaster
+    ## size        : 720, 1440, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (1440, 720}
+    ## resolution  : 0.25, 0.25  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-mom6-cobalt2_areacello_15arcmin_fishMIP_regional_merged.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[2]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-mom6-cobalt2_areacello_60arcmin_fishMIP_regional_merged.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[3]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : gfdl-esm4_areacello_w-fractions_60arcmin_fishMIP_regional_merged.nc
+    ## varname     : region
+    ## name        : region
+    ## 
+    ## [[4]]
+    ## class       : SpatRaster
+    ## size        : 180, 360, 1  (nrow, ncol, nlyr)
+    ## dimensions  : longitude, latitude (360, 180}
+    ## resolution  : 1, 1  (x, y)
+    ## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (CRS84) (OGC:CRS84)
+    ## source      : ipsl-cm6a-lr_areacello_wo-fractions_60arcmin_fishMIP_regional_merged.nc
+    ## varname     : region
+    ## name        : region
